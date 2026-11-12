@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="vi"><head>
+<html lang="vi">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hokkaido mùa đông</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@500;700&amp;display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
 <script src="lib/d3.min.js" data-lib="d3.min.js"></script>
 <script src="lib/topojson-client.min.js" data-lib="topojson-client.min.js"></script>
 <script src="lib/mp4-muxer.js" data-lib="mp4-muxer.js"></script>
@@ -34,7 +35,7 @@ a{color:var(--accent)}
 .side{overflow-y:auto;border-right:1px solid var(--line);background:var(--paper);min-height:0}
 .mapwrap{position:relative;min-height:0;background:#dfe7eb;overflow:hidden}
 .mapwrap canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
-.mapwrap canvas.drag{cursor:grabbing} .mapwrap canvas.pt{cursor:pointer} .mapwrap canvas.place{cursor:crosshair}
+.mapwrap canvas.card{cursor:grab} .mapwrap canvas.drag{cursor:grabbing} .mapwrap canvas.pt{cursor:pointer} .mapwrap canvas.place{cursor:crosshair}
 .btn{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:6px 11px;font-size:13px;font-weight:500;white-space:nowrap}
 .btn:hover{border-color:#cdd2cd;background:#fafbf9}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
@@ -43,6 +44,13 @@ a{color:var(--accent)}
 .btn.small{padding:3px 8px;font-size:12.5px}
 .btn.icon{padding:4px 7px;min-width:30px;justify-content:center}
 .btn:disabled{opacity:.45;cursor:default}
+.btn svg{width:12px;height:12px;fill:currentColor;flex:none}
+/* Play is the one loud control on the map: vermilion against the navy switches */
+.btn.play{background:#cf4219;border-color:#cf4219;color:#fff;font-weight:700;border-radius:999px;padding:6px 13px 6px 11px;box-shadow:0 0 0 2px rgba(255,255,255,.9),0 5px 16px rgba(207,66,25,.42)}
+.btn.play:hover{background:#b5380f;border-color:#b5380f}
+.btn.play:focus-visible{outline-color:#cf4219;outline-offset:3px}
+.btn.sq{padding:6px 10px}
+.mapwrap.playing .zoombox{display:none}
 input[type=text],input[type=number],input[type=date],input[type=time],input[type=url],select,textarea{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 9px;outline:none;min-width:0}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 textarea{resize:vertical}
@@ -234,12 +242,12 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
 </head>
 <body>
 <!-- ================= EDITOR ================= -->
-<div class="app" id="editor" hidden="">
+<div class="app" id="editor" hidden>
   <header class="bar">
     <div><h1 id="eTitle">Chuyến đi</h1><div class="sub" id="eSub"></div></div>
     <span class="grow"></span>
     <div class="actions">
-      <label class="btn">Mở file .zip<input type="file" id="importZip" accept=".zip,.json" hidden=""></label>
+      <label class="btn">Mở file .zip<input type="file" id="importZip" accept=".zip,.json" hidden></label>
       <button class="btn" id="saveEdit" type="button" title="File zip để mở lại và chỉnh sửa tiếp">Lưu bản chỉnh sửa</button>
       <button class="btn" id="saveView" type="button" title="File zip chứa trang HTML và ảnh để xem lịch trình">Xuất bản xem</button>
       <button class="btn" id="ePdf" type="button">PDF</button>
@@ -254,7 +262,7 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
         <span style="flex:1"></span>
         <button class="btn ghost small" id="newTrip" type="button" style="margin-bottom:6px">Chuyến mới</button>
       </div>
-      <div id="paneTrip" hidden="">
+      <div id="paneTrip" hidden>
         <div class="sec">
           <label class="f"><span>Tên chuyến</span><input type="text" id="tName" placeholder="Ví dụ: Hokkaido mùa tuyết"></label>
           <div class="row2" style="margin-top:10px">
@@ -300,9 +308,9 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
 </div>
 
 <!-- ================= VIEWER ================= -->
-<div class="app" id="viewer" hidden="">
+<div class="app" id="viewer" hidden>
   <header class="bar">
-    <button class="btn" id="backEdit" type="button" hidden="">← Chỉnh sửa</button>
+    <button class="btn" id="backEdit" type="button" hidden>← Chỉnh sửa</button>
     <div><h1 id="vTitle"></h1><div class="sub" id="vSub"></div></div>
     <span class="grow"></span>
     <div class="actions">
@@ -312,7 +320,7 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
   </header>
   <div class="split">
     <aside class="side">
-      <div id="vInfo" class="sec" hidden=""></div>
+      <div id="vInfo" class="sec" hidden></div>
       <div class="daychips" id="vDays"></div>
       <div id="vList"></div>
     </aside>
@@ -324,15 +332,16 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
           <button type="button" data-v="img" aria-pressed="false">Tên &amp; ảnh</button>
           <button type="button" data-v="full" aria-pressed="true">Chi tiết</button>
         </div>
-        <div class="seg" id="vPlan" role="group" aria-label="Phương án" hidden="">
+        <div class="seg" id="vPlan" role="group" aria-label="Phương án" hidden>
           <button type="button" data-v="sunny" aria-pressed="true">☀ Trời đẹp</button>
           <button type="button" data-v="rainy" aria-pressed="false">☂ Trời xấu</button>
         </div>
         <span class="grow"></span>
-        <button class="btn primary shadow" id="vPlay" type="button">▶ Play</button>
+        <button class="btn play" id="vPlay" type="button" title="Phát lịch trình trên bản đồ"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.6.6 0 0 0 .9.5l8.3-5.2a.6.6 0 0 0 0-1L5.4 2.3a.6.6 0 0 0-.9.5z"/></svg><span>Play</span></button>
+        <button class="btn shadow sq" id="vStop" type="button" title="Dừng hẳn, quay về bản đồ" aria-label="Dừng hẳn, quay về bản đồ" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="1.5"/></svg></button>
         <button class="btn shadow" id="vMp4" type="button">Lưu MP4</button>
       </div>
-      <div class="drawer" id="vDrawer" hidden=""></div>
+      <div class="drawer" id="vDrawer" hidden></div>
     </main>
   </div>
 </div>
@@ -366,7 +375,7 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
       <label class="f"><span>Lưu ý</span><textarea id="sdNote" rows="2"></textarea></label>
       <div class="f"><span style="font-size:12.5px;color:var(--muted);font-weight:500">Ảnh minh họa</span>
         <div class="thumbs" id="sdImgs"></div>
-        <label class="btn small" style="align-self:flex-start">Thêm ảnh<input type="file" id="sdImgIn" accept="image/*" multiple="" hidden=""></label>
+        <label class="btn small" style="align-self:flex-start">Thêm ảnh<input type="file" id="sdImgIn" accept="image/*" multiple hidden></label>
       </div>
     </fieldset>
   </div>
@@ -385,14 +394,14 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
     <label class="f"><span>Tên file</span><span class="inline"><input type="text" id="mName" style="flex:1" spellcheck="false"><span class="hint" id="mExt" style="margin:0">.mp4</span></span></label>
     <label class="f"><span>Khổ video</span><select id="mAspect"><option value="9:16">Dọc 9:16</option><option value="16:9">Ngang 16:9</option><option value="1:1">Vuông 1:1</option></select></label>
     <p class="hint" id="mInfo"></p>
-    <div id="mProg" hidden=""><div class="prog"><i id="mBar"></i></div><p class="hint" id="mStat"></p></div>
+    <div id="mProg" hidden><div class="prog"><i id="mBar"></i></div><p class="hint" id="mStat"></p></div>
   </div>
   <div class="df"><span class="grow"></span><button class="btn" id="mCancel" type="button">Hủy</button><button class="btn primary" id="mGo" type="button">Chọn nơi lưu &amp; xuất</button></div>
 </dialog>
 
-<div class="scrollfab" id="scrollFab" hidden="">
-  <button type="button" id="fabUp" aria-label="Cuộn lên" title="Cuộn lên"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg></button>
-  <button type="button" id="fabDown" aria-label="Cuộn xuống" title="Cuộn xuống"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+<div class="scrollfab" id="scrollFab" hidden>
+  <button type="button" id="fabUp" aria-label="Cuộn lên" title="Cuộn lên"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
+  <button type="button" id="fabDown" aria-label="Cuộn xuống" title="Cuộn xuống"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
 </div>
 <div class="toast" id="toast" role="status"></div>
 <div id="printRoot"></div>
@@ -637,9 +646,10 @@ function isletPath(ctx, pr, c, s, u){
 function drawBase(ctx, pr, W, H, u, areas){
   const s=pr.scale(), c=[-pr.rotate()[0], -pr.rotate()[1]], path=d3.geoPath(pr, ctx);
   ctx.fillStyle=MAPC.bg; ctx.fillRect(0,0,W,H);
-  ctx.beginPath(); ctx.arc(W/2,H/2,s,0,Math.PI*2); ctx.fillStyle=MAPC.ocean; ctx.fill();
+  const [tx,ty]=pr.translate(), far=Math.max(Math.hypot(tx,ty), Math.hypot(W-tx,ty), Math.hypot(tx,H-ty), Math.hypot(W-tx,H-ty));
+  ctx.beginPath(); ctx.arc(tx,ty,s,0,Math.PI*2); ctx.fillStyle=MAPC.ocean; ctx.fill();
   if (!ATLAS) return;
-  const rho = (Math.hypot(W,H)/2/s >= 1 ? Math.PI/2 : Math.asin(Math.hypot(W,H)/2/s)) + 0.03;
+  const rho = (far/s >= 1 ? Math.PI/2 : Math.asin(far/s)) + 0.03;
   const vis = ATLAS.items.filter(it => d3.geoDistance(c, it.cc) < rho + it.r);
   ctx.beginPath(); for (const it of vis) path(it.f); isletPath(ctx, pr, c, s, u); ctx.fillStyle=MAPC.land; ctx.fill();
   if (areas) for (const [name,a] of areas){ const it=ATLAS.byName.get(name); if (!it || a<0.01) continue; ctx.beginPath(); path(it.f); ctx.fillStyle=rgba(MAPC.hl, 0.035*a); ctx.fill(); }
@@ -744,12 +754,13 @@ class MapView {
     cv.addEventListener('drop', e=>{ if (!opts.onDrop) return; e.preventDefault(); const g=this.geo(this.pos(e)); if (g) opts.onDrop(g[1], g[0]); });
     $$('[data-z]', host).forEach(b => b.onclick = () => { if (this.player) return; const z=b.dataset.z; if (z==='fit') this.fit(); else this.zoomAt([this.W/2,this.H/2], z==='in'?1.6:1/1.6); });
   }
-  resize(){ const r=this.host.getBoundingClientRect(); this.W=Math.max(1,r.width); this.H=Math.max(1,r.height); const d=window.devicePixelRatio||1; this.cv.width=Math.round(this.W*d); this.cv.height=Math.round(this.H*d); if (!this.view) this.fit(); this.draw(); }
+  resize(){ const r=this.host.getBoundingClientRect(); this.W=Math.max(1,r.width); this.H=Math.max(1,r.height); const d=window.devicePixelRatio||1; this.cv.width=Math.round(this.W*d); this.cv.height=Math.round(this.H*d); if (this.player && this.player.reframe) this.player.reframe(this.W, this.H); if (!this.view) this.fit(); this.draw(); }
   fit(){ const pts=this.opts.fitPoints ? this.opts.fitPoints() : []; const v=fitView(pts, this.W, this.H, 0.14, 2); this.view={c:[...v.c], s:v.s}; this.draw(); }
   proj(){ return makeProj(this.view.c, this.view.s, this.W, this.H); }
   pos(e){ const r=this.cv.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; }
   geo(p){ if (!this.view) return null; const g=this.proj().invert(p); return g && isFinite(g[0]) ? g : null; }
   hit(p){ for (let i=this.hits.length-1;i>=0;i--){ const h=this.hits[i]; if (Math.hypot(h.x-p[0],h.y-p[1]) < 16) return i; } return -1; }
+  onCard(p){ const r=this.player && this.player.cardRect; return !!r && p[0]>=r.x && p[0]<=r.x+r.w && p[1]>=r.y && p[1]<=r.y+r.h; }
   hitLabel(p){ if (!this.opts.onLabel) return -1; for (let i=this.hits.length-1;i>=0;i--){ const b=this.hits[i].lb; if (b && p[0]>=b[0] && p[0]<=b[2] && p[1]>=b[1] && p[1]<=b[3]) return i; } return -1; }
   draw(){ if (this._q) return; this._q=requestAnimationFrame(()=>{ this._q=null; this.render(); }); }
   render(){
@@ -768,7 +779,12 @@ class MapView {
   }
   setPlacing(on){ this.placing=on; this.cv.classList.toggle('place', on); }
   down(e){
-    if (this.player) return; this.cv.setPointerCapture(e.pointerId); const p=this.pos(e); this.ptr.set(e.pointerId,p);
+    if (this.player){ // during playback the only thing to grab is the stop card
+      const p=this.pos(e); if (!this.opts.onCardMove || !this.onCard(p)) return; const r=this.player.cardRect;
+      this.cv.setPointerCapture(e.pointerId); this.drag={type:'card', id:e.pointerId, start:p, dx:p[0]-r.x-r.w/2, dy:p[1]-r.y-r.h/2, moved:false, tol:e.pointerType==='touch'?6:3};
+      this.cv.classList.add('drag'); return;
+    }
+    this.cv.setPointerCapture(e.pointerId); const p=this.pos(e); this.ptr.set(e.pointerId,p);
     if (this.ptr.size===2){ const [a,b]=[...this.ptr.values()]; this.drag={type:'pinch', d:Math.hypot(a[0]-b[0],a[1]-b[1]), s:this.view.s}; return; }
     const i=this.hit(p), tol=e.pointerType==='touch' ? 10 : 4;
     if (i>=0 && !this.placing) this.drag={type:'pin', s:this.hits[i].s, start:p, moved:false, tol};
@@ -777,7 +793,10 @@ class MapView {
   }
   move(e){
     const p=this.pos(e);
-    if (!this.drag){ if (!this.player) this.cv.classList.toggle('pt', this.hit(p)>=0 || this.hitLabel(p)>=0); return; }
+    if (this.drag && this.drag.type==='card'){ const d=this.drag; if (e.pointerId!==d.id) return;
+      if (Math.hypot(p[0]-d.start[0], p[1]-d.start[1])>d.tol) d.moved=true;
+      if (d.moved){ this.opts.onCardMove(clamp((p[0]-d.dx)/this.W,0,1), clamp((p[1]-d.dy)/this.H,0,1)); this.draw(); } return; }
+    if (!this.drag){ if (!this.player) this.cv.classList.toggle('pt', this.hit(p)>=0 || this.hitLabel(p)>=0); else this.cv.classList.toggle('card', this.onCard(p)); return; }
     this.ptr.set(e.pointerId,p);
     if (this.drag.type==='pinch' && this.ptr.size===2){ const [a,b]=[...this.ptr.values()]; const d=Math.hypot(a[0]-b[0],a[1]-b[1]); this.zoomAt([(a[0]+b[0])/2,(a[1]+b[1])/2], this.drag.s*d/Math.max(this.drag.d,1)/this.view.s); return; }
     const dist=Math.hypot(p[0]-this.drag.start[0], p[1]-this.drag.start[1]); if (dist>(this.drag.tol||4)) this.drag.moved=true;
@@ -785,20 +804,28 @@ class MapView {
     else if (this.drag.type==='pan' && this.drag.moved){ const c2=this.drag.pr.invert([this.W/2-(p[0]-this.drag.start[0]), this.H/2-(p[1]-this.drag.start[1])]); if (c2&&isFinite(c2[0])){ this.view.c=[c2[0], clamp(c2[1],-85,85)]; this.draw(); } }
   }
   up(e){
+    if (this.drag && this.drag.type==='card'){ const d=this.drag; if (e.pointerId!==d.id) return; this.drag=null; this.cv.classList.remove('drag');
+      // a double tap on the card puts it back above the stop
+      if (!d.moved && e.type==='pointerup'){ const now=performance.now(); if (now-(this._tap||0)<400){ this._tap=0; this.opts.onCardMove(null); this.draw(); } else this._tap=now; }
+      return; }
     this.ptr.delete(e.pointerId); const d=this.drag; if (this.ptr.size) { if (d&&d.type==='pinch') this.drag=null; return; }
     this.drag=null; this.cv.classList.remove('drag'); if (!d) return;
     if (d.type==='pin'){ if (!d.moved && this.opts.onPin) this.opts.onPin(d.s); else if (d.moved && this.opts.onPinDrop) this.opts.onPinDrop(d.s); }
     if (d.type==='pan' && !d.moved && d.label && this.opts.onLabel) this.opts.onLabel(d.label);
     if (d.type==='pan' && !d.moved && this.placing && this.opts.onPlace){ const g=this.geo(this.pos(e)); if (g) this.opts.onPlace(g[1], g[0]); }
   }
-  play(player, onTick, onEnd){
-    this.player=player; player.t=0; let last=performance.now();
-    const step=now=>{ if (this.player!==player) return; player.t+=Math.min(0.1,(now-last)/1000); last=now;
-      if (player.t>=player.duration){ player.t=player.duration; this.render(); onTick&&onTick(player.t); this.stop(); onEnd&&onEnd(); return; }
-      this.render(); onTick&&onTick(player.t); requestAnimationFrame(step); };
+  play(player, onTick, onEnd){ this.player=player; player.t=0; this.paused=false; this._tick=onTick; this._end=onEnd; this.loop(); }
+  loop(){ // one clock per run, so a quick pause + resume never leaves two clocks ticking
+    const player=this.player, run=this._run=(this._run||0)+1; let last=performance.now();
+    const step=now=>{ if (this.player!==player || this.paused || this._run!==run) return; player.t+=clamp((now-last)/1000,0,0.1); last=now;
+      if (player.t>=player.duration){ player.t=player.duration; this.render(); this._tick&&this._tick(player.t); const end=this._end; this.stop(); end&&end(); return; }
+      this.render(); this._tick&&this._tick(player.t); requestAnimationFrame(step); };
     requestAnimationFrame(step);
   }
-  stop(){ if (!this.player) return; const pl=this.player; this.player=null; const v=pl.camAt ? pl.camAt(pl.t) : null; if (v) this.view={c:[...v.c], s:v.s}; this.draw(); }
+  pause(){ if (this.player && !this.paused){ this.paused=true; this.draw(); } }
+  resume(){ if (this.player && this.paused){ this.paused=false; this.loop(); } }
+  stop(){ if (!this.player) return; const pl=this.player; this.player=null; this.paused=false; if (this.drag && this.drag.type==='card') this.drag=null; this.cv.classList.remove('card','drag');
+    const v=pl.viewAt ? pl.viewAt(pl.t) : pl.camAt ? pl.camAt(pl.t) : null; if (v) this.view={c:[...v.c], s:v.s}; this.draw(); }
 }
 
 function drawPins(ctx, pr, c, pins, u){
@@ -816,20 +843,25 @@ function stopView(route, i, W, H){
   if (i>0) span=Math.max(span, distKm(route[i-1], s)*2.2); if (i<route.length-1) span=Math.max(span, distKm(s, route[i+1])*1.6);
   return { c:ll(s), s:scaleForKm(clamp(span, 3, 900), m) };
 }
-function buildPlayer(days, plan, show, W, H, marks){
+// frame: the part of the canvas playback may use and the focus point where the current stop sits (map pixels).
+// Without one the whole canvas is used and stops sit in the middle, as in the video.
+function buildPlayer(days, plan, show, W, H, marks, frame){
+  const F = frame || { l:0, t:0, r:W, b:H, fx:W/2, fy:H/2 }, fw=Math.max(1,F.r-F.l), fh=Math.max(1,F.b-F.t), mx=(F.l+F.r)/2, my=(F.t+F.b)/2;
+  // A fitted view is centred on the frame; restate it as the place under the focus point, where the projection is centred.
+  const aim = v => { if (Math.abs(mx-F.fx)<0.5 && Math.abs(my-F.fy)<0.5) return v; const g=makeProj(v.c, v.s, W, H).translate([mx,my]).invert([F.fx,F.fy]); return g && isFinite(g[0]) ? { c:g, s:v.s } : v; };
   const segs=[]; let t=0, prev=null; const all=[];
   const hold = show==='full' ? 4.2 : show==='img' ? 2.8 : 2;
   days.forEach((day, di) => {
     const route = routeOf(day, plan).filter(s => marks.get(s.id)!=='del'); if (!route.length) return;
     all.push(...route);
     const color = DAY_COLORS[TRIP.days.indexOf(day) % DAY_COLORS.length];
-    const fit = fitView(route, W, H, 0.18, 4);
+    const fit = aim(fitView(route, fw, fh, 0.18, 4));
     const notes = day.notes.filter(n => (n.level==='red'||n.level==='orange') && plainText(n.html));
     const iDur = notes.length ? clamp(2.4 + notes.length*0.9, 3, 7) : 2;
     segs.push({ type:'intro', day, color, route, notes, t0:t, t1:t+iDur, v0:prev||fit, v1:fit }); t+=iDur;
     let pv=fit;
     route.forEach((s,i) => {
-      const sv=stopView(route,i,W,H);
+      const sv=stopView(route,i,fw,fh);
       if (i===0){ segs.push({ type:'zoom', day, color, route, i, t0:t, t1:t+1.3, v0:fit, v1:sv }); t+=1.3; }
       else { const km=distKm(route[i-1], s); const d=clamp(1+Math.log10(1+km)*0.9, 1.4, 4.2); segs.push({ type:'move', day, color, route, i, mode:(s.leg&&s.leg.mode)||'other', t0:t, t1:t+d, v0:pv, v1:sv }); t+=d; }
       segs.push({ type:'hold', day, color, route, i, stop:s, t0:t, t1:t+hold, v0:sv, v1:sv }); t+=hold; pv=sv;
@@ -837,24 +869,28 @@ function buildPlayer(days, plan, show, W, H, marks){
     prev=pv;
   });
   if (!segs.length) return null;
-  const allFit = fitView(all, W, H, 0.16, 4);
+  const allFit = aim(fitView(all, fw, fh, 0.16, 4));
   segs.push({ type:'outro', t0:t, t1:t+2.2, v0:prev, v1:allFit, routes:segs.filter(s=>s.type==='intro') }); t+=2.2;
-  const P = { segs, duration:t+0.8, show, t:0, W, H, allFit };
+  const P = { segs, duration:t+0.8, show, t:0, W, H, fw, fh, fx:F.fx, fy:F.fy, allFit };
   P.segAt = tt => segs.find(s => tt>=s.t0 && tt<s.t1) || segs[segs.length-1];
   P.camAt = tt => camAt(P, tt);
   P.render = (ctx,W2,H2,tt,u) => renderPlay(ctx, W2, H2, P, tt, u);
   P.stopAt = tt => { const sg=P.segAt(tt); if (!sg || !sg.route) return null; if (sg.type==='intro') return null; return sg.route[sg.i]; };
+  // the same view with the projection centred on the canvas (for handing the map back after playback)
+  P.viewAt = tt => { const v=camAt(P,tt); if (Math.abs(P.fx-P.W/2)<0.5 && Math.abs(P.fy-P.H/2)<0.5) return v; const g=makeProj(v.c, v.s, P.W, P.H).translate([P.fx,P.fy]).invert([P.W/2,P.H/2]); return g && isFinite(g[0]) ? { c:g, s:v.s } : v; };
+  P.reframe = (W2,H2) => { const kx=W2/P.W, ky=H2/P.H; P.fx*=kx; P.fy*=ky; P.fw*=kx; P.fh*=ky; P.W=W2; P.H=H2; };
   return P;
 }
 function camAt(P, t){
   const sg=P.segAt(t); const p=clamp((t-sg.t0)/Math.max(sg.t1-sg.t0,1e-6),0,1);
   const k = sg.type==='intro' ? ease(clamp(p/0.45,0,1)) : sg.type==='hold' ? 0 : ease(p);
   const c=d3.geoInterpolate(sg.v0.c, sg.v1.c)(k); let ls=lerp(Math.log(sg.v0.s), Math.log(sg.v1.s), k);
-  if (sg.type==='move'){ const m=Math.min(P.W,P.H), d=d3.geoDistance(sg.v0.c, sg.v1.c); const fitS=m*0.6/Math.max(Math.sin(Math.min(d,Math.PI/2)),1e-4); ls += Math.min(0, Math.log(fitS)-ls) * Math.sin(Math.PI*p); }
+  if (sg.type==='move'){ const m=Math.min(P.fw,P.fh), d=d3.geoDistance(sg.v0.c, sg.v1.c); const fitS=m*0.6/Math.max(Math.sin(Math.min(d,Math.PI/2)),1e-4); ls += Math.min(0, Math.log(fitS)-ls) * Math.sin(Math.PI*p); }
   return { c, s:Math.exp(ls) };
 }
 function renderPlay(ctx, W, H, P, t, u){
-  const v=camAt(P,t), pr=makeProj(v.c, v.s, W, H), sg=P.segAt(t);
+  const v=camAt(P,t), pr=makeProj(v.c, v.s, W, H).translate([P.fx, P.fy]), sg=P.segAt(t);
+  P.cardRect=null; const A = P.area ? P.area() : null; // A: the part of the map no button covers (interactive playback only)
   const day = sg.day || null;
   const areas=new Map(); if (sg.route) sg.route.forEach(s=>{ const a=areaOf(s); if (a) areas.set(a,1); });
   drawBase(ctx, pr, W, H, u, areas);
@@ -877,49 +913,97 @@ function renderPlay(ctx, W, H, P, t, u){
     const reached = i<cur || (i===cur && sg.type!=='move'); drawPin(ctx, q[0], q[1], i+1, color, u, { filled:reached, alpha: reached||i===cur ? 1 : 0.55, big:i===cur&&sg.type==='hold', ring:i===cur&&sg.type==='hold', dashed:s.plan==='rainy' }); });
   // day chip
   if (day){ const txt=`Ngày ${TRIP.days.indexOf(day)+1} · ${fmtDay(day.date)}`; ctx.font=FONT(700,13*u); const w=ctx.measureText(txt).width+22*u; ctx.save(); ctx.shadowColor='rgba(0,0,0,.12)'; ctx.shadowBlur=10*u; rrect(ctx,14*u,14*u,w,28*u,14*u); ctx.fillStyle='#fff'; ctx.fill(); ctx.restore(); ctx.fillStyle=color; ctx.textBaseline='middle'; ctx.textAlign='left'; ctx.fillText(txt, 25*u, 28.5*u); }
-  if (sg.type==='hold'){ const p=(t-sg.t0)/(sg.t1-sg.t0); const a=Math.min(smooth(0,0.15,p), 1-smooth(0.88,1,p)); const q=pr(ll(sg.stop)); if (q) drawCard(ctx, q[0], q[1], sg.stop, day, P.show, a, u, W, H, color); }
-  if (sg.type==='intro') drawIntro(ctx, W, H, sg, t, u);
+  if (sg.type==='hold'){ const p=(t-sg.t0)/(sg.t1-sg.t0); const a=Math.min(smooth(0,0.15,p), 1-smooth(0.88,1,p)); const q=pr(ll(sg.stop));
+    if (q){ const r=drawCard(ctx, q[0], q[1], sg.stop, day, P.show, a, u, W, H, color, A ? { area:A, pos:P.cardPos && P.cardPos() } : null); if (r && a>0.3) P.cardRect=r; } }
+  if (sg.type==='intro') drawIntro(ctx, W, H, sg, t, u, A);
 }
-function drawCard(ctx, x, y, s, day, show, alpha, u, W, H, color){
-  if (alpha<=0.01) return;
-  const pad=12*u, maxW = show==='full' ? 270*u : 230*u, lines=[];
-  ctx.save(); ctx.globalAlpha=alpha;
-  ctx.font=FONT(700,15*u); const title=wrapLines(ctx, s.name||'(Chưa đặt tên)', maxW, 2);
+function cardContent(s, day, show){
   const sub=[s.time, durLabel(s)].filter(Boolean).join(' · ');
-  let img=null; if ((show==='img'||show==='full') && s.imgs && s.imgs.length && (!MP4_RENDER || imgSafe(s.imgs[0]))){ const im=imgObj(s.imgs[0], ()=>{}); if (im.complete && im.naturalWidth) img=im; }
-  const body=[];
+  let img=null; if ((show==='img'||show==='full') && s.imgs && s.imgs.length && (!MP4_RENDER || imgSafe(s.imgs[0]))){ const im=imgObj(s.imgs[0], ()=>{ if (vMap && vMap.player) vMap.draw(); }); if (im.complete && im.naturalWidth) img=im; }
+  const extra=[];
   if (show==='full'){
-    ctx.font=FONT(400,12*u);
-    if (s.act) body.push(...wrapLines(ctx, s.act, maxW, 3).map(l=>({t:l})));
-    const lg=day && legOf(day, s); if (lg && lg.leg){ const m=MODES[lg.leg.mode]||MODES.other; body.push({t:[m.icon+' '+m.label, lg.leg.min?fmtDur(lg.leg.min):'', lg.leg.cost!=null?fmtMoney(lg.leg.cost, lg.leg.cur, lg.leg.cost2):''].filter(Boolean).join(' · '), muted:true}); }
-    if (s.cost!=null) body.push({t:'Chi phí: '+fmtMoney(s.cost, s.cur, s.cost2), muted:true});
+    const lg=day && legOf(day, s); if (lg && lg.leg){ const m=MODES[lg.leg.mode]||MODES.other; extra.push([m.icon+' '+m.label, lg.leg.min?fmtDur(lg.leg.min):'', lg.leg.cost!=null?fmtMoney(lg.leg.cost, lg.leg.cur, lg.leg.cost2):''].filter(Boolean).join(' · ')); }
+    if (s.cost!=null) extra.push('Chi phí: '+fmtMoney(s.cost, s.cur, s.cost2));
   }
+  return { title:s.name||'(Chưa đặt tên)', sub, img, act: show==='full' ? (s.act||'') : '', extra, show };
+}
+// Measure one arrangement of the card. o: tw text width, actLines, ihMax photo height cap, side (photo left of the text), noImg.
+function cardLayout(ctx, C, u, o){
+  const pad=12*u, tw=o.tw, img=o.noImg ? null : C.img;
+  ctx.font=FONT(700,15*u); const title=wrapLines(ctx, C.title, tw, 2);
+  ctx.font=FONT(400,12*u); const body=[];
+  if (C.act) body.push(...wrapLines(ctx, C.act, tw, o.actLines).map(t=>({t})));
+  for (const x of C.extra) for (const t of (o.wrapExtra ? wrapLines(ctx, x, tw, 2) : [x])) body.push({t, muted:true});
   ctx.font=FONT(700,15*u); let w=Math.max(...title.map(l=>ctx.measureText(l).width));
-  ctx.font=FONT(500,12*u); if (sub) w=Math.max(w, ctx.measureText(sub).width);
+  ctx.font=FONT(500,12*u); if (C.sub) w=Math.max(w, ctx.measureText(C.sub).width);
   ctx.font=FONT(400,12*u); for (const b of body) w=Math.max(w, ctx.measureText(b.t).width);
-  let iw=0, ih=0; if (img){ iw=Math.max(w, show==='full'?250*u:210*u); iw=Math.min(iw, maxW); ih=Math.min(iw*img.naturalHeight/img.naturalWidth, 150*u); w=Math.max(w,iw); }
-  w=Math.min(w, maxW);
-  const h = pad + (img? ih+10*u : 0) + title.length*19*u + (sub?17*u:0) + (body.length? 6*u + body.length*16.5*u : 0) + pad - 2*u;
-  const cw=w+pad*2, off=20*u; let cx=clamp(x-cw/2, 10*u, W-cw-10*u), cy=y-off-h; let up=true; if (cy<52*u){ cy=y+off; up=false; } cy=clamp(cy, 10*u, H-h-10*u);
-  ctx.translate(0,(1-alpha)*8*u*(up?1:-1));
+  const th = title.length*19*u + (C.sub?17*u:0) + (body.length? 6*u + body.length*16.5*u : 0);
+  if (img && o.side){ w=Math.min(w, tw); const iw=o.sideW, ih=clamp(th, 64*u, 120*u);
+    return { title, body, img, side:true, iw, ih, th, w, cw:pad+iw+12*u+w+pad, h:pad+Math.max(th,ih)+pad-2*u }; }
+  let iw=0, ih=0; if (img){ iw=Math.max(w, C.show==='full'?250*u:210*u); iw=Math.min(iw, tw); ih=Math.min(iw*img.naturalHeight/img.naturalWidth, o.ihMax ?? 150*u); w=Math.max(w,iw); }
+  w=Math.min(w, tw);
+  return { title, body, img, side:false, iw, ih, th, w, cw:w+pad*2, h: pad + (img? ih+10*u : 0) + th + pad - 2*u };
+}
+function paintCard(ctx, L, C, cx, cy, u, color, grip){
+  const pad=12*u, {cw,h}=L;
   ctx.save(); ctx.shadowColor='rgba(15,25,35,.22)'; ctx.shadowBlur=18*u; ctx.shadowOffsetY=6*u; rrect(ctx,cx,cy,cw,h,12*u); ctx.fillStyle='#fff'; ctx.fill(); ctx.restore();
   ctx.fillStyle=color; ctx.fillRect(cx+pad, cy, 26*u, 3*u);
-  let yy=cy+pad;
-  if (img){ ctx.save(); rrect(ctx, cx+(cw-iw)/2, yy, iw, ih, 8*u); ctx.clip(); const r=img.naturalWidth/img.naturalHeight, rr=iw/ih; let sw=img.naturalWidth, sh=img.naturalHeight, sx=0, sy=0; if (r>rr){ sw=sh*rr; sx=(img.naturalWidth-sw)/2; } else { sh=sw/rr; sy=(img.naturalHeight-sh)/2; } ctx.drawImage(img, sx, sy, sw, sh, cx+(cw-iw)/2, yy, iw, ih); ctx.restore(); yy+=ih+10*u; }
-  ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillStyle='#1c2630'; ctx.font=FONT(700,15*u); for (const l of title){ ctx.fillText(l, cx+pad, yy); yy+=19*u; }
-  if (sub){ ctx.font=FONT(500,12*u); ctx.fillStyle='#6b757d'; ctx.fillText(sub, cx+pad, yy); yy+=17*u; }
-  if (body.length){ yy+=6*u; for (const b of body){ ctx.font=FONT(400,12*u); ctx.fillStyle=b.muted?'#6b757d':'#1c2630'; ctx.fillText(b.t, cx+pad, yy); yy+=16.5*u; } }
-  ctx.restore();
+  const pic=(x,y,w,hh)=>{ const img=L.img; ctx.save(); rrect(ctx, x, y, w, hh, 8*u); ctx.clip(); const r=img.naturalWidth/img.naturalHeight, rr=w/hh; let sw=img.naturalWidth, sh=img.naturalHeight, sx=0, sy=0; if (r>rr){ sw=sh*rr; sx=(img.naturalWidth-sw)/2; } else { sh=sw/rr; sy=(img.naturalHeight-sh)/2; } ctx.drawImage(img, sx, sy, sw, sh, x, y, w, hh); ctx.restore(); };
+  let yy=cy+pad, tx=cx+pad;
+  if (L.img && L.side){ const bh=Math.max(L.th, L.ih); pic(cx+pad, cy+pad+(bh-L.ih)/2, L.iw, L.ih); tx=cx+pad+L.iw+12*u; yy=cy+pad+(bh-L.th)/2; }
+  else if (L.img){ pic(cx+(cw-L.iw)/2, yy, L.iw, L.ih); yy+=L.ih+10*u; }
+  ctx.textAlign='left'; ctx.textBaseline='top'; ctx.fillStyle='#1c2630'; ctx.font=FONT(700,15*u); for (const l of L.title){ ctx.fillText(l, tx, yy); yy+=19*u; }
+  if (C.sub){ ctx.font=FONT(500,12*u); ctx.fillStyle='#6b757d'; ctx.fillText(C.sub, tx, yy); yy+=17*u; }
+  if (L.body.length){ yy+=6*u; for (const b of L.body){ ctx.font=FONT(400,12*u); ctx.fillStyle=b.muted?'#6b757d':'#1c2630'; ctx.fillText(b.t, tx, yy); yy+=16.5*u; } }
+  if (grip){ ctx.fillStyle='#b9c0c5'; for (let i=0;i<2;i++) for (let j=0;j<3;j++){ ctx.beginPath(); ctx.arc(cx+cw-9.5*u+i*4*u, cy+8*u+j*4*u, 1.15*u, 0, Math.PI*2); ctx.fill(); } }
 }
-function drawIntro(ctx, W, H, sg, t, u){
+// The stop card. o (interactive playback): { area: the part of the map no button covers, pos: where the reader dragged the card }.
+// Without o (the video) the card keeps its usual size and goes above the stop, or below when there is no room above.
+// Returns the card's box so the map can let the reader drag it.
+function drawCard(ctx, x, y, s, day, show, alpha, u, W, H, color, o){
+  if (alpha<=0.01) return null;
+  const C=cardContent(s, day, show), maxW = show==='full' ? 270*u : 230*u, off=20*u;
+  ctx.save(); ctx.globalAlpha=alpha;
+  let L=null, cx, cy, up=true;
+  if (!o){
+    L=cardLayout(ctx, C, u, { tw:maxW, actLines:3 }); const {cw,h}=L;
+    cx=clamp(x-cw/2, 10*u, W-cw-10*u); cy=y-off-h; if (cy<52*u){ cy=y+off; up=false; } cy=clamp(cy, 10*u, H-h-10*u);
+  } else {
+    const A=o.area, free=o.pos, B = free ? { l:A.l, t:6*u, r:A.r, b:A.b } : A; // a dragged card may cover the day label, never sit under the buttons
+    const room = free ? B.b-B.t : y-off-A.t, aw=B.r-B.l;
+    const tw=Math.max(120*u, Math.min(maxW, aw-24*u)), sw=96*u, stw=Math.min(maxW, aw-24*u-sw-12*u);
+    // Try the full card first, then a shorter photo, then the photo beside the text, then fewer lines, until it fits.
+    const tries=[{ tw, actLines:3, wrapExtra:true }];
+    if (C.img){ const n=cardLayout(ctx, C, u, tries[0]), cut=n.h-room; if (cut>0 && n.ih-cut>=72*u) tries.push({ ...tries[0], ihMax:n.ih-cut });
+      if (stw>=140*u) for (const k of [3,2,1]) tries.push({ tw:stw, actLines:k, wrapExtra:true, side:true, sideW:sw }); }
+    for (const k of [2,1]) tries.push({ tw, actLines:k, wrapExtra:true, noImg:true });
+    for (const op of tries){ const l=cardLayout(ctx, C, u, op); if (l.h<=room){ L=l; break; } if (!L || l.h<L.h) L=l; }
+    const {cw,h}=L;
+    if (free){ cx=clamp(free.x*W-cw/2, B.l, B.r-cw); cy=clamp(free.y*H-h/2, B.t, B.b-h); }
+    else { cx=clamp(x-cw/2, A.l, A.r-cw); cy=Math.max(A.t, y-off-h); }
+    if (free){ // a dashed lead from the stop to the card that was dragged away from it
+      const nx=clamp(x,cx,cx+cw), ny=clamp(y,cy,cy+h), dx=nx-x, dy=ny-y, dd=Math.hypot(dx,dy);
+      if (dd>24*u){ const k=19*u/dd; ctx.save(); ctx.strokeStyle=rgba(color,0.75); ctx.lineWidth=1.6*u; ctx.setLineDash([4*u,3*u]); ctx.beginPath(); ctx.moveTo(x+dx*k, y+dy*k); ctx.lineTo(nx,ny); ctx.stroke(); ctx.restore(); }
+    }
+  }
+  ctx.translate(0,(1-alpha)*8*u*(up?1:-1));
+  paintCard(ctx, L, C, cx, cy, u, color, !!o);
+  ctx.restore();
+  return { x:cx, y:cy, w:L.cw, h:L.h };
+}
+function drawIntro(ctx, W, H, sg, t, u, A){
   const p=t-sg.t0, d=sg.t1-sg.t0, a=Math.min(smooth(0,0.45,p), 1-smooth(d-0.6,d,p)); if (a<=0.01) return;
   const day=sg.day, idx=TRIP.days.indexOf(day)+1, maxW=Math.min(W-40*u, 380*u), pad=18*u;
   ctx.save(); ctx.globalAlpha=a;
   ctx.fillStyle=`rgba(243,244,241,${0.55*a})`; ctx.fillRect(0,0,W,H);
-  ctx.font=FONT(400,12.5*u); const nl=sg.notes.map(n=>({lv:n.level, lines:wrapLines(ctx, plainText(n.html), maxW-2*pad-18*u, 3)}));
-  const wt=weatherText(day.weather);
-  const h = pad + 16*u + 26*u + (wt?20*u:0) + (nl.length? 10*u + nl.reduce((s,n)=>s+n.lines.length*17*u+6*u,0) : 0) + pad;
-  const x=(W-maxW)/2, y=(H-h)/2 - (1-a)*10*u;
+  const wt=weatherText(day.weather), top=A ? 10*u : 0, bot=A ? A.b : H;
+  let nl, h;
+  for (let k=3;k>=1;k--){ // on a small map, notes get fewer lines so the card stays above the buttons
+    ctx.font=FONT(400,12.5*u); nl=sg.notes.map(n=>({lv:n.level, lines:wrapLines(ctx, plainText(n.html), maxW-2*pad-18*u, k)}));
+    h = pad + 16*u + 26*u + (wt?20*u:0) + (nl.length? 10*u + nl.reduce((s,n)=>s+n.lines.length*17*u+6*u,0) : 0) + pad;
+    if (!A || h<=bot-top) break;
+  }
+  const x=(W-maxW)/2, y=(A ? Math.max(top, (top+bot-h)/2) : (H-h)/2) - (1-a)*10*u;
   ctx.save(); ctx.shadowColor='rgba(15,25,35,.2)'; ctx.shadowBlur=26*u; ctx.shadowOffsetY=8*u; rrect(ctx,x,y,maxW,h,16*u); ctx.fillStyle='#fff'; ctx.fill(); ctx.restore();
   let yy=y+pad; ctx.textAlign='left'; ctx.textBaseline='top';
   ctx.font=FONT(600,12*u); ctx.fillStyle=sg.color; ctx.fillText(`Ngày ${idx}`, x+pad, yy); yy+=16*u;
@@ -1160,6 +1244,7 @@ $('#newTrip').onclick=()=>{ if (!confirm('Tạo chuyến mới? Chuyến hiện 
 
 /* ============================================================ viewer */
 let vMap=null, VSEL=new Set(), VPLAN='sunny', VSHOW='full', MARKS=new Map(), DRAWER=null, NOWID=null, PREVIEW=false, VOPEN=new Set(), FOCUS=null;
+let CARDPOS=null; // where the reader dragged the playback card (centre, as fractions of the map); null = above the stop
 const MARK_TTL = 7*24*3600*1000;
 const markKey = () => 'trip-marks:'+TRIP.id;
 function loadMarks(){ MARKS=new Map(); try { const o=JSON.parse(localStorage.getItem(markKey())||'null'); if (o && o.exp > Date.now()) MARKS=new Map(Object.entries(o.m)); else localStorage.removeItem(markKey()); } catch(e){} }
@@ -1308,20 +1393,43 @@ function markNow(id, scroll=true){
   NOWID=id; $$('#vList .stop.now').forEach(x=>x.classList.remove('now'));
   if (!id) return; let li=$(`#vList .stop[data-id="${id}"]`); if (!li){ const di=TRIP.days.findIndex(d=>d.stops.some(s=>s.id===id)); if (di>=0 && !VOPEN.has(di)){ VOPEN.add(di); renderVList(); li=$(`#vList .stop[data-id="${id}"]`); } } if (li){ li.classList.add('now'); if (scroll) sideReveal(li); }
 }
-function stopPlay(){ if (vMap && vMap.player){ vMap.stop(); } $('#vPlay').textContent='▶ Play'; markNow(null); }
+// The part of the map that no button covers during playback, in map pixels. The day label sits in the top 50px.
+function playArea(withFab=true){
+  const host=$('#vMap').getBoundingClientRect(), W=vMap.W, H=vMap.H; let l=10, t=50, r=W-10, b=H-10;
+  for (const e of $$('#vMap .mapbar > :not(.grow)')){ const q=e.getBoundingClientRect(); if (q.width && q.height) b=Math.min(b, q.top-host.top-8); }
+  const fab=$('#scrollFab'); if (withFab && !fab.hidden){ const q=fab.getBoundingClientRect(); if (q.width && q.left<host.right && q.bottom>host.top+t && q.top<host.top+b) r=Math.min(r, q.left-host.left-6); }
+  if (b-t<120) t=8;                          // a very short map (phone on its side): the card may cover the day label
+  if (b-t<60) b=Math.min(H-10, t+60);        // and as a last resort run under the buttons rather than shrink to nothing
+  return { l, t, r, b };
+}
+// Stops sit low in the free area so their card has room above them.
+function playFrame(show){ const A=playArea(false); return { ...A, fx:(A.l+A.r)/2, fy:A.t+(A.b-A.t)*(show==='name'?0.6:0.7) }; }
+const PLAY_ICON = { play:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.6.6 0 0 0 .9.5l8.3-5.2a.6.6 0 0 0 0-1L5.4 2.3a.6.6 0 0 0-.9.5z"/></svg>',
+  pause:'<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>' };
+function playUI(state){ // 'idle' | 'play' | 'pause'
+  const b=$('#vPlay'); b.dataset.state=state;
+  b.innerHTML = state==='play' ? PLAY_ICON.pause+'<span>Pause</span>' : PLAY_ICON.play+`<span>${state==='pause'?'Tiếp tục':'Play'}</span>`;
+  b.title = state==='play' ? 'Tạm dừng' : state==='pause' ? 'Chạy tiếp từ chỗ đang dừng' : 'Phát lịch trình trên bản đồ';
+  $('#vStop').hidden = state==='idle'; $('#vMp4').hidden = state!=='idle';
+  $('#vMap').classList.toggle('playing', state!=='idle');
+}
+function stopPlay(){ if (vMap && vMap.player){ vMap.stop(); } playUI('idle'); markNow(null); }
 $('#vPlay').onclick=()=>{
-  if (vMap.player){ stopPlay(); return; }
-  const P=buildPlayer(selDays(), VPLAN, VSHOW, vMap.W, vMap.H, MARKS); if (!P){ toast('Các ngày đang chọn chưa có điểm đến.'); return; }
-  $('#vDrawer').hidden=true; FOCUS=null; $('#vPlay').textContent='■ Dừng'; let last=null; keepMapInView();
-  vMap.play(P, t=>{ const s=P.stopAt(t); const id=s?s.id:null; if (id!==last){ last=id; markNow(id); } }, ()=>{ $('#vPlay').textContent='▶ Play'; setTimeout(()=>markNow(null), 1200); });
+  if (vMap.player){ if (vMap.paused){ vMap.resume(); playUI('play'); } else { vMap.pause(); playUI('pause'); } return; }
+  playUI('play'); // switch the buttons first: the free area depends on them
+  const P=buildPlayer(selDays(), VPLAN, VSHOW, vMap.W, vMap.H, MARKS, playFrame(VSHOW)); if (!P){ playUI('idle'); toast('Các ngày đang chọn chưa có điểm đến.'); return; }
+  P.area=()=>playArea(); P.cardPos=()=>CARDPOS;
+  $('#vDrawer').hidden=true; FOCUS=null; let last=null; keepMapInView();
+  vMap.play(P, t=>{ const s=P.stopAt(t); const id=s?s.id:null; if (id!==last){ last=id; markNow(id); } }, ()=>{ playUI('idle'); setTimeout(()=>markNow(null), 1200); });
 };
+$('#vStop').onclick=stopPlay;
 function segBind(id, cb){ $$('#'+id+' button').forEach(b=>b.onclick=()=>{ $$('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed', x===b)); cb(b.dataset.v); }); }
-segBind('vShow', v=>{ VSHOW=v; });
+segBind('vShow', v=>{ VSHOW=v; if (vMap && vMap.player){ vMap.player.show=v; vMap.draw(); } }); // also changes the card of a running or paused playback
 segBind('vPlan', v=>{ VPLAN=v; stopPlay(); renderVList(); vMap.draw(); });
 function initViewer(preview){
   PREVIEW=!!preview; $('#viewer').hidden=false; $('#editor').hidden=true; $('#backEdit').hidden=!preview;
   loadMarks(); VSEL=new Set(TRIP.days.map((_,i)=>i)); VOPEN=new Set(); FOCUS=null; renderViewerHead(); renderVDays(); renderVList();
-  if (!vMap) vMap=new MapView($('#vMap'), { scene:viewerScene, fitPoints:()=>selDays().flatMap(d=>d.stops), onPin:s=>{ const d=TRIP.days.find(x=>x.stops.includes(s)); FOCUS=s.id; openDrawer(s,d); markNow(s.id); vMap.draw(); }, onLabel:s=>jumpToStop(s) });
+  if (!vMap) vMap=new MapView($('#vMap'), { scene:viewerScene, fitPoints:()=>selDays().flatMap(d=>d.stops), onPin:s=>{ const d=TRIP.days.find(x=>x.stops.includes(s)); FOCUS=s.id; openDrawer(s,d); markNow(s.id); vMap.draw(); }, onLabel:s=>jumpToStop(s), onCardMove:(x,y)=>{ CARDPOS = x==null ? null : { x, y }; } });
   else { vMap.view=null; vMap.resize(); }
   document.title = (TRIP.name||'Lịch trình');
 }
@@ -1633,4 +1741,6 @@ function sampleTrip(){
   document.fonts && document.fonts.load('600 12px "Be Vietnam Pro"').then(()=>{ eMap&&eMap.draw(); vMap&&vMap.draw(); });
 })();
 
-</script></body></html>
+</script>
+</body>
+</html>
