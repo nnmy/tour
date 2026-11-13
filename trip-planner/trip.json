@@ -1,0 +1,1108 @@
+{
+ "v": 1,
+ "id": "khd-2027",
+ "sample": "khd-2027-v2",
+ "name": "Hokkaido mùa đông",
+ "start": "2027-01-12",
+ "end": "2027-01-16",
+ "people": [
+  "M",
+  "Q",
+  "T"
+ ],
+ "currencies": [
+  "JPY",
+  "VND"
+ ],
+ "thumbH": 64,
+ "bookings": [
+  {
+   "id": "b1",
+   "item": "Chuyến bay đi · Tue. 12/1",
+   "state": "booked",
+   "cost": null,
+   "cost2": null,
+   "cur": "JPY",
+   "link": "images/skymark-so-do-ghe.jpg",
+   "note": "Skymark BC761 Nagoya (NGO) 7:10 → New Chitose 8:50, ghế 6A, 3A (M, T)\nBC171 Kobe (UKB) 8:05 → New Chitose 9:55 (Q)\nHành lý: xách tay 10 kg, ký gửi 20 kg. Link mở sơ đồ ghế."
+  },
+  {
+   "id": "b2",
+   "item": "Chuyến bay về · Sat. 16/1",
+   "state": "booked",
+   "cost": null,
+   "cost2": null,
+   "cur": "JPY",
+   "link": "",
+   "note": "Skymark BC768 New Chitose 20:55 → Nagoya (NGO) 22:45, ghế 6A, 3A (M, T)\nChuyến về Kobe (UKB) chưa có số hiệu (Q)"
+  },
+  {
+   "id": "b3",
+   "item": "HOTEL LiVEMAX PREMIUM Sapporo-Odorikouen",
+   "state": "booked",
+   "cost": 28500,
+   "cost2": null,
+   "cur": "JPY",
+   "link": "https://maps.app.goo.gl/QNp2JC4sfaKikKhN6",
+   "note": "Từ Tue. 12/1 đến Sat. 16/1, phòng Twin. Nhận phòng sau 15:00, trả phòng trước 10:00.\n28.500 ¥ mỗi người, gồm khách sạn và vé máy bay.\nĐêm Mon. 11/1 ở Nagoya."
+  },
+  {
+   "id": "b4",
+   "item": "Tour Furano & Biei (14/1)",
+   "state": "pending",
+   "cost": 7500,
+   "cost2": null,
+   "cur": "JPY",
+   "link": "https://www.klook.com/en-US/activity/178974-furano-winter-reverie-christmas-tree-blue-pond-ningle-terrace",
+   "note": "Furano & Biei Seasonal trên Klook, 5 điểm, 11:30–22:00, đón ở cổng Bắc ga Sapporo."
+  },
+  {
+   "id": "b5",
+   "item": "Vé combo highway bus Sapporo – Asahikawa (15/1)",
+   "state": "pending",
+   "cost": 5900,
+   "cost2": null,
+   "cur": "JPY",
+   "link": "https://www.chuo-bus.co.jp/main/setticket/?ope=list&sy=2&ge=23&ri_y=2027&ri_m=1&ri_d=14&ha_y=2027&ha_m=11&ha_d=13",
+   "note": "Mua trước trong ngày 13/1."
+  }
+ ],
+ "notes": "<b>Nhớ đem:</b> kairo, pin dự phòng (để trong túi áo trong), găng mỏng, ice cleats, kem dưỡng tay, giày đế bám.<br><b>Máy ảnh:</b> tối thiểu một lens tele để nén đồi tuyết, cây đơn độc, chim cánh cụt, thác; thêm 16–35 cho Blue Pond, Otaru và hầm Hill of the Buddha. Tripod gọn, khăn lau lens.<br><b>Chụp tuyết:</b> bù sáng +0.7 đến +1.3 EV, chụp RAW, WB khoảng 5.200–5.800K. Từ chỗ lạnh vào chỗ ấm thì bỏ máy vô túi zip cho khỏi đọng hơi nước.<br><b>Ăn uống:</b> ưu tiên soup curry (cay cấp 0–1, vd Rojiura Curry SAMURAI, Garaku), tonkatsu, shabu-shabu, hamburg, udon nước trong. Né ramen Asahikawa với ramen miso Sapporo nha.<br><b>Cân nhắc:</b> JR Sapporo–Furano Area Pass theo số ngày, rẻ hơn mua vé lẻ, có ghế đặt trước, lỡ tàu đổi chuyến dễ.",
+ "days": [
+  {
+   "date": "2027-01-12",
+   "weather": {
+    "cond": "",
+    "tmin": "",
+    "tmax": "",
+    "text": ""
+   },
+   "notes": [
+    {
+     "id": "n01",
+     "level": "blue",
+     "html": "Q đáp lúc 9:55 (BC171)"
+    },
+    {
+     "id": "n02",
+     "level": "blue",
+     "html": "Nếu bão: bỏ Northern Horse Park, đi Sapporo rồi ghé sở thú Maruyama/đền Hokkaido."
+    }
+   ],
+   "stops": [
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "other",
+      "min": null,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s01",
+     "name": "Sân bay New Chitose",
+     "lat": 42.7752,
+     "lon": 141.6923,
+     "time": "08:50",
+     "dur": 60,
+     "flex": false,
+     "act": "Gửi hành lý ở sân bay.",
+     "cost": 600,
+     "cost2": 1000,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=New%20Chitose%20Airport",
+     "note": "Phí gửi tùy cỡ vali."
+    },
+    {
+     "plan": "sunny",
+     "imgs": [
+      "d1-northern-horse-park"
+     ],
+     "leg": {
+      "mode": "bus",
+      "min": 15,
+      "cost": 0,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=New%20Chitose%20Airport&destination=Northern%20Horse%20Park%20Tomakomai&travelmode=transit",
+      "note": "Xe shuttle miễn phí, chuyến 09:50."
+     },
+     "id": "s02",
+     "name": "Northern Horse Park",
+     "lat": 42.7184,
+     "lon": 141.6735,
+     "time": "10:00",
+     "dur": 240,
+     "flex": false,
+     "act": "Cưỡi ngựa, khoảng ¥1.900 cho 5 phút. Công viên mở cửa lúc 10:00, cách sân bay khoảng 10 km.",
+     "cost": 2000,
+     "cost2": 6500,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/aYYUtKYFdGA55b2b8",
+     "note": ""
+    },
+    {
+     "plan": "sunny",
+     "imgs": [],
+     "leg": {
+      "mode": "bus",
+      "min": 15,
+      "cost": 0,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Northern%20Horse%20Park%20Tomakomai&destination=New%20Chitose%20Airport&travelmode=transit",
+      "note": "Shuttle về sân bay."
+     },
+     "id": "s03",
+     "name": "Sân bay New Chitose (lấy hành lý)",
+     "lat": 42.7752,
+     "lon": 141.6923,
+     "time": "14:15",
+     "dur": 15,
+     "flex": false,
+     "act": "Lấy lại hành lý.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=New%20Chitose%20Airport",
+     "note": ""
+    },
+    {
+     "plan": "sunny",
+     "imgs": [],
+     "leg": {
+      "mode": "train",
+      "min": 37,
+      "cost": 1150,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=New%20Chitose%20Airport&destination=Sapporo%20Station&travelmode=transit",
+      "note": "Rapid Airport chuyến 14:30."
+     },
+     "id": "s04",
+     "name": "Ga Sapporo",
+     "lat": 43.0687,
+     "lon": 141.3508,
+     "time": "15:07",
+     "dur": 10,
+     "flex": false,
+     "act": "",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Station",
+     "note": ""
+    },
+    {
+     "plan": "rainy",
+     "imgs": [],
+     "leg": {
+      "mode": "train",
+      "min": 37,
+      "cost": 1150,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=New%20Chitose%20Airport&destination=Sapporo%20Station&travelmode=transit",
+      "note": "Rapid Airport."
+     },
+     "id": "s05",
+     "name": "Ga Sapporo",
+     "lat": 43.0687,
+     "lon": 141.3508,
+     "time": "10:30",
+     "dur": 15,
+     "flex": false,
+     "act": "Trời bão thì bỏ Horse Park, lấy hành lý đi thẳng vô Sapporo.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Station",
+     "note": ""
+    },
+    {
+     "plan": "rainy",
+     "imgs": [],
+     "leg": {
+      "mode": "subway",
+      "min": 20,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20Station&destination=Sapporo%20Maruyama%20Zoo&travelmode=transit",
+      "note": "Tuyến Tozai, xuống ga Maruyama-koen."
+     },
+     "id": "s06",
+     "name": "Sở thú Maruyama",
+     "lat": 43.0518,
+     "lon": 141.309,
+     "time": "11:15",
+     "dur": 120,
+     "flex": false,
+     "act": "Dạo sở thú Maruyama.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Maruyama%20Zoo",
+     "note": ""
+    },
+    {
+     "plan": "rainy",
+     "imgs": [
+      "d1-hokkaido-jingu"
+     ],
+     "leg": {
+      "mode": "walk",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20Maruyama%20Zoo&destination=Hokkaido%20Jingu&travelmode=walking",
+      "note": ""
+     },
+     "id": "s07",
+     "name": "Đền Hokkaido",
+     "lat": 43.0543,
+     "lon": 141.3077,
+     "time": "13:30",
+     "dur": 60,
+     "flex": false,
+     "act": "Ghé đền Hokkaido, ngay cạnh sở thú.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/EbmV7JAK1TVczxhZ8",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "subway",
+      "min": 15,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20Station&destination=HOTEL%20LiVEMAX%20PREMIUM%20Sapporo-Odorikouen&travelmode=transit",
+      "note": "Hoặc đi bộ khoảng 19 phút từ ga Sapporo."
+     },
+     "id": "s08",
+     "name": "Khách sạn LiVEMAX Premium Odorikoen",
+     "lat": 43.0573,
+     "lon": 141.343,
+     "time": "15:20",
+     "dur": 45,
+     "flex": false,
+     "act": "Nhận phòng (sau 15:00), phòng Twin.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/QNp2JC4sfaKikKhN6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "walk",
+      "min": 15,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=HOTEL%20LiVEMAX%20PREMIUM%20Sapporo-Odorikouen&destination=Sapporo%20TV%20Tower&travelmode=walking",
+      "note": ""
+     },
+     "id": "s09",
+     "name": "Công viên Odori & tháp TV Sapporo",
+     "lat": 43.0611,
+     "lon": 141.3564,
+     "time": "16:15",
+     "dur": 75,
+     "flex": false,
+     "act": "Dạo công viên Odori, lên đài quan sát tháp TV (hoặc T38 ở ga Sapporo) ngắm blue hour.",
+     "cost": 740,
+     "cost2": 1000,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20TV%20Tower",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "walk",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20TV%20Tower&destination=Soup%20Curry%20GARAKU%20Sapporo&travelmode=walking",
+      "note": ""
+     },
+     "id": "s10",
+     "name": "Soup curry Garaku",
+     "lat": 43.0574,
+     "lon": 141.354,
+     "time": "18:00",
+     "dur": 75,
+     "flex": false,
+     "act": "Ăn soup curry, cay cấp 0–1. Garaku đông quá thì qua Rojiura Curry SAMURAI.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Soup%20Curry%20GARAKU%20Sapporo",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "date": "2027-01-13",
+   "weather": {
+    "cond": "",
+    "tmin": "",
+    "tmax": "",
+    "text": ""
+   },
+   "notes": [
+    {
+     "id": "n03",
+     "level": "orange",
+     "html": "Bus 108 khoảng 1 chuyến/giờ, chuyến cuối tầm 14:00, nên rời nghĩa trang trễ nhất 13:00."
+    },
+    {
+     "id": "n04",
+     "level": "orange",
+     "html": "Nghĩa trang không có bến taxi: cài sẵn app GO (taxi khoảng ¥5.000–7.000)."
+    },
+    {
+     "id": "n05",
+     "level": "red",
+     "html": "Rời Otaru trễ nhất 20:30 (tàu về đến khoảng 23:00)."
+    },
+    {
+     "id": "n06",
+     "level": "orange",
+     "html": "Mua trước <a href=\"https://www.chuo-bus.co.jp/main/setticket/?ope=list&sy=2&ge=23&ri_y=2027&ri_m=1&ri_d=14&ha_y=2027&ha_m=11&ha_d=13\">vé combo</a> (¥5.900) highway bus Sapporo – Asahikawa cho ngày 15/1."
+    },
+    {
+     "id": "n07",
+     "level": "blue",
+     "html": "Nếu tuyết lớn: đổi sang đền Hokkaido / sở thú Maruyama. Nếu mỏi chân: bỏ Otaru."
+    }
+   ],
+   "stops": [
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "other",
+      "min": null,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s11",
+     "name": "Khách sạn",
+     "lat": 43.0573,
+     "lon": 141.343,
+     "time": "08:30",
+     "dur": null,
+     "flex": false,
+     "act": "Đi tàu điện ngầm ra Makomanai.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/QNp2JC4sfaKikKhN6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "subway",
+      "min": 25,
+      "cost": 350,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=HOTEL%20LiVEMAX%20PREMIUM%20Sapporo-Odorikouen&destination=Makomanai%20Station&travelmode=transit",
+      "note": "Tuyến Namboku, ga cuối Makomanai."
+     },
+     "id": "s12",
+     "name": "Ga Makomanai",
+     "lat": 42.9928,
+     "lon": 141.3534,
+     "time": "09:00",
+     "dur": 15,
+     "flex": false,
+     "act": "Đón bus Chuo 108 ở bến số 2.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Makomanai%20Station",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "d3-hill-of-the-buddha",
+      "d3-moai-makomanai"
+     ],
+     "leg": {
+      "mode": "bus",
+      "min": 25,
+      "cost": 380,
+      "cost2": 500,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Makomanai%20Station&destination=Hill%20of%20the%20Buddha%20Makomanai%20Takino%20Cemetery&travelmode=transit",
+      "note": "Bus Chuo 108, khoảng 1 chuyến/giờ."
+     },
+     "id": "s13",
+     "name": "Hill of the Buddha & tượng Moai",
+     "lat": 42.9236,
+     "lon": 141.394,
+     "time": "10:15",
+     "dur": 120,
+     "flex": false,
+     "act": "Tượng Phật trên đồi của Tadao Ando và hàng tượng Moai trong nghĩa trang Makomanai Takino. Tượng mở 10:00–15:00.",
+     "cost": 300,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/PkwZA1X9iH4KuWnj6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "bus",
+      "min": 60,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Hill%20of%20the%20Buddha%20Makomanai%20Takino%20Cemetery&destination=Sapporo%20Station&travelmode=transit",
+      "note": "Bus 108 về Makomanai rồi tàu điện ngầm về ga Sapporo."
+     },
+     "id": "s14",
+     "name": "Ga Sapporo",
+     "lat": 43.0687,
+     "lon": 141.3508,
+     "time": "14:30",
+     "dur": 10,
+     "flex": false,
+     "act": "Ăn trưa quanh ga rồi đón Rapid đi Otaru lúc 14:30.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Station",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "d3-otaru-canal"
+     ],
+     "leg": {
+      "mode": "train",
+      "min": 32,
+      "cost": 750,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20Station&destination=Otaru%20Canal&travelmode=transit",
+      "note": "Rapid Sapporo → Otaru."
+     },
+     "id": "s15",
+     "name": "Kênh đào Otaru",
+     "lat": 43.1995,
+     "lon": 141.0019,
+     "time": "15:10",
+     "dur": 50,
+     "flex": false,
+     "act": "Ngắm kênh đào lúc giờ vàng.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/kRhznAAK9fW3267x6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "walk",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Otaru%20Canal&destination=LeTAO%20Main%20Store%20Otaru&travelmode=walking",
+      "note": ""
+     },
+     "id": "s16",
+     "name": "Phố Sakaimachi & LeTAO",
+     "lat": 43.1912,
+     "lon": 141.0058,
+     "time": "16:00",
+     "dur": 75,
+     "flex": false,
+     "act": "Dạo phố Sakaimachi, ăn nhẹ ở LeTAO, chờ đèn gas lên lúc chạng vạng.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=LeTAO%20Main%20Store%20Otaru",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "train",
+      "min": 32,
+      "cost": 750,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=LeTAO%20Main%20Store%20Otaru&destination=Tanukikoji%20Sapporo&travelmode=transit",
+      "note": ""
+     },
+     "id": "s17",
+     "name": "Ăn tối ở Sapporo",
+     "lat": 43.0605,
+     "lon": 141.3536,
+     "time": "18:15",
+     "dur": 90,
+     "flex": false,
+     "act": "Về Sapporo ăn tối.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Tanukikoji%20Sapporo",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "date": "2027-01-14",
+   "weather": {
+    "cond": "",
+    "tmin": "",
+    "tmax": "",
+    "text": ""
+   },
+   "notes": [
+    {
+     "id": "n08",
+     "level": "orange",
+     "html": "Tour chưa đặt. Chọn tour trên Klook, đón ở Sapporo:<ul><li><a href=\"https://www.klook.com/en-US/activity/178974-furano-winter-reverie-christmas-tree-blue-pond-ningle-terrace\">Furano &amp; Biei Seasonal</a> (¥7.500, 5 điểm): 11:30–22:00, đúng lịch bên dưới.</li><li><a href=\"https://www.klook.com/en-US/activity/105219-asahikawa-zoo-ningle-terrace-shirahige-waterfall-day-tour-private-tour-sapporo\">Dreamy Illumination Tour</a> (từ ¥7.500, 5 điểm): 10:30–21:30, không ghé thác.</li></ul>"
+    }
+   ],
+   "stops": [
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "other",
+      "min": null,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s18",
+     "name": "Ga Sapporo, cổng Bắc",
+     "lat": 43.07,
+     "lon": 141.3506,
+     "time": "11:30",
+     "dur": null,
+     "flex": false,
+     "act": "Lên xe tour Furano & Biei, xe chạy lúc 11:30.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Station%20North%20Exit",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "shikisai-no-oka"
+     ],
+     "leg": {
+      "mode": "tour",
+      "min": 150,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s19",
+     "name": "Đồi Shikisai no Oka",
+     "lat": 43.463,
+     "lon": 142.475,
+     "time": "14:00",
+     "dur": 70,
+     "flex": false,
+     "act": "Tour dừng 70 phút ngắm đồi tuyết.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Shikisai%20no%20Oka%20Biei",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "d2-christmas-tree"
+     ],
+     "leg": {
+      "mode": "tour",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": "Xe buýt tour khoảng 10 phút."
+     },
+     "id": "s20",
+     "name": "Christmas Tree",
+     "lat": 43.547,
+     "lon": 142.4385,
+     "time": "15:20",
+     "dur": 20,
+     "flex": false,
+     "act": "",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/9UuuU8PouDJ4cyXN6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "shirahige"
+     ],
+     "leg": {
+      "mode": "tour",
+      "min": 30,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": "Xe buýt tour khoảng 30 phút."
+     },
+     "id": "s21",
+     "name": "Thác Shirahige",
+     "lat": 43.4797,
+     "lon": 142.6362,
+     "time": "16:10",
+     "dur": 20,
+     "flex": false,
+     "act": "",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Shirahige%20Waterfall%20Biei",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "d2-shirogane-blue-pond"
+     ],
+     "leg": {
+      "mode": "tour",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": "Xe buýt tour khoảng 10 phút."
+     },
+     "id": "s22",
+     "name": "Shirogane Blue Pond",
+     "lat": 43.4934,
+     "lon": 142.6143,
+     "time": "16:40",
+     "dur": 30,
+     "flex": false,
+     "act": "Coi hồ Xanh lên đèn (illumination 16:30–21:00).",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/DQfDsQ5gW1QAhZGF6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "ningle-terrace"
+     ],
+     "leg": {
+      "mode": "tour",
+      "min": 60,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": "Xe buýt tour khoảng 60 phút."
+     },
+     "id": "s23",
+     "name": "Ningle Terrace",
+     "lat": 43.329,
+     "lon": 142.3565,
+     "time": "18:10",
+     "dur": 60,
+     "flex": false,
+     "act": "Dạo dãy nhà gỗ bán đồ thủ công trong rừng.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Ningle%20Terrace%20Furano",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "tour",
+      "min": 170,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s24",
+     "name": "Về ga Sapporo",
+     "lat": 43.07,
+     "lon": 141.3506,
+     "time": "22:00",
+     "dur": null,
+     "flex": false,
+     "act": "Xe rời Ningle Terrace lúc 19:10, về tới Sapporo khoảng 22:00.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Station%20North%20Exit",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "date": "2027-01-15",
+   "weather": {
+    "cond": "",
+    "tmin": "",
+    "tmax": "",
+    "text": ""
+   },
+   "notes": [
+    {
+     "id": "n09",
+     "level": "orange",
+     "html": "Đi bằng vé combo highway bus đã mua hôm 13/1, nhớ đem theo vé."
+    }
+   ],
+   "stops": [
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "other",
+      "min": null,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s25",
+     "name": "Bến xe buýt Sapporo Ekimae",
+     "lat": 43.0674,
+     "lon": 141.353,
+     "time": "",
+     "dur": null,
+     "flex": false,
+     "act": "Lên highway bus đi Asahikawa bằng vé combo đã mua hôm trước.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Ekimae%20Bus%20Terminal",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "d4-asahiyama-zoo"
+     ],
+     "leg": {
+      "mode": "bus",
+      "min": 165,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20Ekimae%20Bus%20Terminal&destination=Asahiyama%20Zoo&travelmode=transit",
+      "note": "Highway bus Sapporo → Asahikawa (khoảng 2 tiếng), rồi bus nội thành vào sở thú. Đi bằng vé combo."
+     },
+     "id": "s26",
+     "name": "Sở thú Asahiyama",
+     "lat": 43.7685,
+     "lon": 142.48,
+     "time": "",
+     "dur": null,
+     "flex": false,
+     "act": "Sở thú mùa đông mở 10:30–15:30, 14:30 có màn chim cánh cụt đi dạo.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/BfmUeCskWAK5KZNv5",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "bus",
+      "min": 165,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Asahiyama%20Zoo&destination=Sapporo%20Ekimae%20Bus%20Terminal&travelmode=transit",
+      "note": "Bus về ga Asahikawa rồi highway bus về Sapporo, vé combo."
+     },
+     "id": "s27",
+     "name": "Về Sapporo",
+     "lat": 43.0674,
+     "lon": 141.353,
+     "time": "",
+     "dur": null,
+     "flex": false,
+     "act": "",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Ekimae%20Bus%20Terminal",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "date": "2027-01-16",
+   "weather": {
+    "cond": "",
+    "tmin": "",
+    "tmax": "",
+    "text": ""
+   },
+   "notes": [
+    {
+     "id": "n10",
+     "level": "red",
+     "html": "Trả phòng trước 10:00, dọn đồ từ tối hôm trước."
+    },
+    {
+     "id": "n11",
+     "level": "red",
+     "html": "Có mặt ở sân bay trễ nhất 17:30 (bay lúc 20:55)."
+    },
+    {
+     "id": "n12",
+     "level": "blue",
+     "html": "Upopoy nghỉ Thứ Hai; 11/1/2027 là ngày lễ nên T3 12/1 nhiều khả năng đóng cửa, vì vậy dời Upopoy qua hôm nay (nhớ xác nhận lại)."
+    },
+    {
+     "id": "n13",
+     "level": "green",
+     "html": "Upopoy có tủ gửi đồ, gửi vali rồi đi tham quan cho khỏe."
+    }
+   ],
+   "stops": [
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "other",
+      "min": null,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "",
+      "note": ""
+     },
+     "id": "s28",
+     "name": "Ga Sapporo",
+     "lat": 43.0687,
+     "lon": 141.3508,
+     "time": "08:30",
+     "dur": 10,
+     "flex": false,
+     "act": "Trả phòng rồi đón Limited Express Hokuto/Suzuran (khoảng 1 chuyến/giờ).",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Sapporo%20Station",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "train",
+      "min": 60,
+      "cost": 2500,
+      "cost2": 3500,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Sapporo%20Station&destination=Shiraoi%20Station&travelmode=transit",
+      "note": "Limited Express Hokuto/Suzuran."
+     },
+     "id": "s29",
+     "name": "Ga Shiraoi",
+     "lat": 42.5513,
+     "lon": 141.3564,
+     "time": "09:30",
+     "dur": 10,
+     "flex": false,
+     "act": "",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Shiraoi%20Station",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [
+      "d5-upopoy"
+     ],
+     "leg": {
+      "mode": "walk",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Shiraoi%20Station&destination=Upopoy%20National%20Ainu%20Museum&travelmode=walking",
+      "note": ""
+     },
+     "id": "s30",
+     "name": "Upopoy",
+     "lat": 42.5577,
+     "lon": 141.3611,
+     "time": "09:45",
+     "dur": 225,
+     "flex": false,
+     "act": "Bảo tàng Ainu, làng nhà Ainu phục dựng, coi múa hát Ainu. Mở 9:00–17:00, có tủ gửi đồ.",
+     "cost": 1200,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://maps.app.goo.gl/zAbBdXRXehL39ftL6",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "walk",
+      "min": 10,
+      "cost": null,
+      "cost2": null,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Upopoy%20National%20Ainu%20Museum&destination=Shiraoi%20Station&travelmode=walking",
+      "note": ""
+     },
+     "id": "s31",
+     "name": "Ga Shiraoi (về)",
+     "lat": 42.5513,
+     "lon": 141.3564,
+     "time": "13:35",
+     "dur": 10,
+     "flex": false,
+     "act": "",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=Shiraoi%20Station",
+     "note": ""
+    },
+    {
+     "plan": "all",
+     "imgs": [],
+     "leg": {
+      "mode": "train",
+      "min": 40,
+      "cost": 1500,
+      "cost2": 2500,
+      "cur": "JPY",
+      "link": "https://www.google.com/maps/dir/?api=1&origin=Shiraoi%20Station&destination=New%20Chitose%20Airport&travelmode=transit",
+      "note": "Khoảng 25–40 phút tùy chuyến."
+     },
+     "id": "s32",
+     "name": "Sân bay New Chitose",
+     "lat": 42.7752,
+     "lon": 141.6923,
+     "time": "14:30",
+     "dur": 360,
+     "flex": true,
+     "act": "Mua quà, ăn uống ở sân bay. Có mặt trễ nhất 17:30, bay lúc 20:55.",
+     "cost": null,
+     "cost2": null,
+     "cur": "JPY",
+     "link": "https://www.google.com/maps/search/?api=1&query=New%20Chitose%20Airport",
+     "note": ""
+    }
+   ]
+  }
+ ],
+ "images": {
+  "d1-northern-horse-park": {
+   "name": "d1-northern-horse-park.jpg",
+   "file": "images/d1-northern-horse-park.jpg"
+  },
+  "d1-hokkaido-jingu": {
+   "name": "d1-hokkaido-jingu.jpg",
+   "file": "images/d1-hokkaido-jingu.jpg"
+  },
+  "d3-hill-of-the-buddha": {
+   "name": "d3-hill-of-the-buddha.jpg",
+   "file": "images/d3-hill-of-the-buddha.jpg"
+  },
+  "d3-moai-makomanai": {
+   "name": "d3-moai-makomanai.jpg",
+   "file": "images/d3-moai-makomanai.jpg"
+  },
+  "d3-otaru-canal": {
+   "name": "d3-otaru-canal.jpg",
+   "file": "images/d3-otaru-canal.jpg"
+  },
+  "shikisai-no-oka": {
+   "name": "shikisai-no-oka.jpg",
+   "file": "images/shikisai-no-oka.jpg"
+  },
+  "d2-christmas-tree": {
+   "name": "d2-christmas-tree.jpg",
+   "file": "images/d2-christmas-tree.jpg"
+  },
+  "shirahige": {
+   "name": "shirahige.jpg",
+   "file": "images/shirahige.jpg"
+  },
+  "d2-shirogane-blue-pond": {
+   "name": "d2-shirogane-blue-pond.jpg",
+   "file": "images/d2-shirogane-blue-pond.jpg"
+  },
+  "ningle-terrace": {
+   "name": "ningle-terrace.jpg",
+   "file": "images/ningle-terrace.jpg"
+  },
+  "d4-asahiyama-zoo": {
+   "name": "d4-asahiyama-zoo.jpg",
+   "file": "images/d4-asahiyama-zoo.jpg"
+  },
+  "d5-upopoy": {
+   "name": "d5-upopoy.jpg",
+   "file": "images/d5-upopoy.jpg"
+  }
+ }
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lịch trình chuyến đi</title>
+<title>Soạn lịch trình</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
@@ -104,8 +104,27 @@ label.f>span{font-weight:500}
 .stop.v{scroll-margin-top:12px}
 .stop.now .dot{background:var(--accent);color:#fff}
 .stop.off{opacity:.55}
-.stop.draggable{cursor:grab}
-.stop.dragover{box-shadow:inset 0 2px 0 var(--accent)}
+/* editor list: ⋮⋮ handle, drag ghost and drop markers */
+.tl.e::before{left:88px}
+.stop.e{grid-template-columns:18px 44px 22px 1fr auto;user-select:none;-webkit-user-select:none}
+.grip{width:18px;height:30px;border:0;background:none;padding:0;border-radius:6px;color:var(--faint);display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:none;-webkit-touch-callout:none}
+.grip:hover{color:var(--ink);background:var(--line2)}
+.grip svg{width:8px;height:14px;fill:currentColor}
+@media (pointer:fine){ .stop.e{cursor:grab} }
+@media (pointer:coarse){ .grip{width:26px;height:36px} .stop.e{grid-template-columns:26px 44px 22px 1fr auto} .tl.e::before{left:96px} }
+.stop.dragging{opacity:.35}
+.stop.drop-before::after,.stop.drop-after::after{content:"";position:absolute;left:0;right:0;top:-1px;height:2px;border-radius:2px;background:var(--accent)}
+.stop.drop-after::after{top:auto;bottom:-1px}
+.sec.dropzone{outline:2px dashed var(--accent);outline-offset:-6px;border-radius:12px}
+.daychip.drop{outline:2px dashed var(--accent);outline-offset:2px}
+.dragghost{position:fixed;z-index:200;pointer-events:none;transform:translate(-50%,calc(-100% - 14px));max-width:240px;padding:5px 11px;border-radius:9px;background:var(--card);border:1.5px solid var(--accent);color:var(--accent);font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 8px 22px rgba(10,20,30,.22)}
+body.dragging,body.dragging *{cursor:grabbing!important;user-select:none;-webkit-user-select:none}
+#paneDays>.daychips{position:sticky;top:var(--tabsH,41px);z-index:4;background:var(--paper)}
+.dhrow{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.dhrow h3{margin:0;flex:1;min-width:0}
+.dhrow select{font-size:12px;padding:3px 6px;max-width:160px}
+.notice{margin:12px 18px 0;padding:10px 12px;border-radius:10px;background:#fdf0de;border:1px solid #efd3ab;font-size:12.5px;color:#5c3d12}
+.notice p{margin:0 0 8px} .notice code{font-size:12px}
 .status{width:22px;height:22px;border-radius:50%;border:1.5px solid #c3c9c4;background:var(--card);padding:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
 .status.done{background:var(--green);border-color:var(--green)}
 .status.del{background:#8b9399;border-color:#8b9399}
@@ -158,11 +177,6 @@ legend{font-size:12.5px;font-weight:600;padding:0 6px}
 .daysec.closed{padding-bottom:4px}
 .daysec.closed .dayhead{padding-bottom:10px}
 .stop.focus{background:var(--accent-soft)}
-.thumbtip{position:fixed;z-index:60;display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-radius:12px;background:rgba(255,255,255,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 12px 34px rgba(10,20,30,.22);pointer-events:none}
-.thumbtip figure{margin:0;display:flex;flex-direction:column;gap:3px;max-width:180px}
-.thumbtip img{display:block;width:auto;border-radius:7px;object-fit:cover}
-.thumbtip .tipx{position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;border:0;background:var(--ink);color:#fff;font-size:12px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(10,20,30,.25);pointer-events:auto;cursor:pointer}
-@media (pointer:coarse){ .thumbtip .tipx{width:32px;height:32px;top:-12px;right:-12px;font-size:13px} }
 /* floating scroll buttons (phones: the map takes swipes, so these move the page) */
 .scrollfab{position:fixed;right:0;top:calc(50% - 48px);z-index:40;display:flex;flex-direction:column;background:rgba(255,255,255,.95);border:1px solid var(--line);border-right:0;border-radius:12px 0 0 12px;box-shadow:0 4px 14px rgba(20,30,40,.16);overflow:hidden;padding-right:env(safe-area-inset-right)}
 .scrollfab[hidden]{display:none}
@@ -172,10 +186,16 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
 .scrollfab button:disabled{color:var(--faint);cursor:default}
 .scrollfab button:focus-visible{outline-offset:-3px}
 .scrollfab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.thumbtip figcaption{font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.notes-list{display:flex;flex-direction:column;gap:4px;padding:0 18px 6px}
-.notes-list .n{display:flex;gap:8px;align-items:baseline;font-size:12.5px}
-.notes-list .n .lvl{transform:translateY(1px)}
+/* day reminders in the viewer: small type, can be folded away */
+.notes{padding:0 18px 6px}
+.ntog{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:2px 0;font-size:11px;font-weight:600;color:var(--muted)}
+.ntog:hover{color:var(--ink)}
+.ntog .chev{width:9px;font-size:9px}
+.ntog .ndots{display:inline-flex;gap:3px;margin-left:2px}
+.ntog .ndots .lvl{width:7px;height:7px}
+.notes-list{display:flex;flex-direction:column;gap:3px;padding:2px 0 0}
+.notes-list .n{display:flex;gap:7px;align-items:baseline;font-size:10px;line-height:1.45}
+.notes-list .n .lvl{width:8px;height:8px;transform:translateY(.5px)}
 /* detail drawer */
 .drawer{position:absolute;top:12px;right:12px;bottom:12px;width:min(380px,calc(100% - 24px));background:var(--card);border-radius:14px;box-shadow:0 20px 60px rgba(10,20,30,.25);display:flex;flex-direction:column;overflow:hidden;z-index:4}
 .drawer .dh{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
@@ -196,7 +216,9 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
 .bk>:nth-child(1){grid-column:1/3}.bk>:nth-child(2){grid-column:3}.bk>:nth-child(3){grid-column:1}.bk>:nth-child(4){grid-column:2/4}.bk>:nth-child(5){grid-column:1/-1}.bk>:nth-child(6){grid-column:1/-1}
 .bk select,.bk input{width:100%}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:10px;font-size:13px;z-index:100;opacity:0;transition:opacity .2s}
-.toast.on{opacity:1}
+.toast{pointer-events:none;max-width:calc(100vw - 24px)}
+.toast.on{opacity:1;pointer-events:auto}
+.toast .tbtn{margin-left:12px;background:none;border:0;padding:0;color:#a9c6ea;font-weight:700;text-decoration:underline;text-underline-offset:2px}
 .prog{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin:6px 0}
 .prog i{display:block;height:100%;width:0;background:var(--accent)}
 #printRoot{display:none}
@@ -211,7 +233,7 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
 @media print{
   @page{size:A4;margin:16mm 14mm}
   html,body{background:#fff!important;height:auto}
-  .app,dialog,.toast,.scrollfab,.thumbtip{display:none!important}
+  .app,dialog,.toast,.scrollfab,.dragghost{display:none!important}
   #printRoot{display:block;color:#1c2630;font:10.5pt/1.5 var(--font)}
   .p-cover{border-bottom:1.5pt solid #1c2630;padding-bottom:10pt;margin-bottom:14pt}
   .p-cover h1{font-size:22pt;margin:0;letter-spacing:-.01em}
@@ -247,7 +269,7 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
     <div><h1 id="eTitle">Chuyến đi</h1><div class="sub" id="eSub"></div></div>
     <span class="grow"></span>
     <div class="actions">
-      <label class="btn">Mở file .zip<input type="file" id="importZip" accept=".zip,.json" hidden></label>
+      <label class="btn" title="Mở bản chỉnh sửa (.zip) hoặc file lịch trình (.json)">Mở file<input type="file" id="importZip" accept=".zip,.json" hidden></label>
       <button class="btn" id="saveEdit" type="button" title="File zip để mở lại và chỉnh sửa tiếp">Lưu bản chỉnh sửa</button>
       <button class="btn" id="saveView" type="button" title="File zip chứa trang HTML và ảnh để xem lịch trình">Xuất bản xem</button>
       <button class="btn" id="ePdf" type="button">PDF</button>
@@ -286,16 +308,12 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
           <button class="btn small" id="addBook" type="button">+ Thêm mục</button>
         </div>
         <div class="sec">
-          <h3>Ảnh trong tooltip ngày</h3>
-          <label class="inline" style="font-size:13px">Chiều cao mỗi ảnh <input type="number" id="tThumbH" min="32" max="200" step="4" style="width:80px"> px</label>
-          <p class="hint">Ở trang xem, rê chuột lên nhãn ngày hoặc phần lưu ý sẽ hiện ảnh các điểm đến trong ngày, các ảnh cao bằng nhau.</p>
-        </div>
-        <div class="sec">
           <h3>Lưu ý chung</h3>
           <textarea id="tNotes" rows="5" style="width:100%" placeholder="Hỗ trợ HTML, ví dụ &lt;a href=&quot;…&quot;&gt;link&lt;/a&gt;"></textarea>
         </div>
       </div>
       <div id="paneDays">
+        <div class="notice" id="eNotice" role="status" hidden></div>
         <div class="daychips" id="eDays"></div>
         <div id="eDay"></div>
       </div>
@@ -329,7 +347,6 @@ body.has-fab .side{padding-right:32px} /* a lane for the scroll buttons so they 
       <div class="mapbar">
         <div class="seg" id="vShow" role="group" aria-label="Khi phát hiện">
           <button type="button" data-v="name" aria-pressed="false">Tên</button>
-          <button type="button" data-v="img" aria-pressed="false">Tên &amp; ảnh</button>
           <button type="button" data-v="full" aria-pressed="true">Chi tiết</button>
         </div>
         <div class="seg" id="vPlan" role="group" aria-label="Phương án" hidden>
@@ -430,7 +447,11 @@ const el = (tag, cls, html) => { const e=document.createElement(tag); if (cls) e
 const hexRgb = h => { h=h.replace('#',''); if (h.length===3) h=h.split('').map(c=>c+c).join(''); const n=parseInt(h,16); return [n>>16&255,n>>8&255,n&255]; };
 const rgba = (h,a) => { const [r,g,b]=hexRgb(h); return `rgba(${r},${g},${b},${a})`; };
 const distKm = (a,b) => d3.geoDistance(ll(a), ll(b)) * R_EARTH;
-function toast(msg, ms=2400){ const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'), ms); }
+function toast(msg, ms=2400, action){
+  const t=$('#toast'); t.textContent=msg;
+  if (action){ const b=el('button','tbtn',esc(action.label)); b.type='button'; b.onclick=()=>{ t.classList.remove('on'); action.fn(); }; t.appendChild(b); }
+  t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'), ms);
+}
 function sanitize(html){
   const doc = new DOMParser().parseFromString('<div>'+(html||'')+'</div>', 'text/html');
   doc.querySelectorAll('script,style,iframe,object,embed,link,meta').forEach(n => n.remove());
@@ -1014,9 +1035,9 @@ function drawIntro(ctx, W, H, sg, t, u, A){
 }
 
 /* ============================================================ editor */
-let SELD = 0, eMap = null;
+let SELD = 0, eMap = null, EDITVER = 0;
 const curDay = () => TRIP.days[SELD];
-function changed(rerender){ autosave(); if (rerender) renderDay(); if (eMap) eMap.draw(); renderHeader(); }
+function changed(rerender){ EDITVER++; autosave(); if (rerender) renderDay(); if (eMap) eMap.draw(); renderHeader(); }
 function renderHeader(){
   $('#eTitle').textContent = TRIP.name || 'Chuyến đi';
   $('#eSub').textContent = TRIP.start ? `${fmtDayLong(TRIP.start)} – ${fmtDayLong(TRIP.end)} · ${TRIP.days.length} ngày` : '';
@@ -1055,11 +1076,9 @@ function renderTrip(){
     del.onclick=()=>{ TRIP.bookings.splice(i,1); renderTrip(); changed(); };
     r.style.paddingBottom='10px'; r.style.borderBottom='1px solid var(--line2)'; bk.appendChild(r);
   });
-  $('#tThumbH').value=TRIP.thumbH||64;
 }
 $('#tName').oninput=e=>{ TRIP.name=e.target.value; changed(); };
 $('#tNotes').oninput=e=>{ TRIP.notes=e.target.value; changed(); };
-$('#tThumbH').oninput=e=>{ const v=+e.target.value; if (v>=32&&v<=200){ TRIP.thumbH=v; changed(); } };
 const onDates=()=>{ const s=$('#tStart').value, e=$('#tEnd').value; if (!s||!e) return; if (e<s){ toast('Ngày về phải sau ngày đi'); return; }
   const lost=TRIP.days.filter(d=>(d.date<s||d.date>e) && (d.stops.length||d.notes.length));
   if (lost.length && !confirm(`Có ${lost.length} ngày ngoài khoảng mới đang có dữ liệu. Xóa các ngày đó?`)){ renderTrip(); return; }
@@ -1071,7 +1090,11 @@ $('#addBook').onclick=()=>{ TRIP.bookings.push({ id:uid('b'), item:'', state:'pe
 /* ---- day pane ---- */
 function renderDayChips(){
   const box=$('#eDays'); box.innerHTML='';
-  TRIP.days.forEach((d,i)=>{ const b=el('button','daychip',`<b>Ngày ${i+1}</b><span>${fmtDay(d.date)} · ${d.stops.length} điểm</span>`); b.type='button'; b.setAttribute('aria-pressed', i===SELD); b.onclick=()=>{ SELD=i; renderDayChips(); renderDay(); fitDay(); }; box.appendChild(b); });
+  TRIP.days.forEach((d,i)=>{ const b=el('button','daychip',`<b>Ngày ${i+1}</b><span>${fmtDay(d.date)} · ${d.stops.length} điểm</span>`); b.type='button'; b.dataset.i=i; b.setAttribute('aria-pressed', i===SELD);
+    if (TRIP.days.length>1) b.title='Kéo thả lên một ngày khác để hoán đổi lịch trình hai ngày';
+    b.onclick=()=>{ SELD=i; renderDayChips(); renderDay(); fitDay(); };
+    b.onpointerdown=e=>{ if (e.pointerType==='mouse' && !e.button && TRIP.days.length>1) dragStart(e, 'day', i, b, `Ngày ${i+1} · ${fmtDay(d.date)}`); };
+    box.appendChild(b); });
 }
 function fitDay(){ if (!eMap || !eMap.W) return; if (curDay().stops.length) eMap.fit(); }
 function costSum(items){ const m=new Map(); for (const [a,b,c] of items){ if (a==null||a==='') continue; const v=m.get(c)||[0,0]; v[0]+=+a; v[1]+=+(b??a); m.set(c,v); } return m; }
@@ -1085,7 +1108,8 @@ function renderDay(){
   const box=$('#eDay'); const d=curDay(); box.innerHTML=''; if (!d) return;
   const idx=SELD+1;
   const sec1=el('div','sec');
-  sec1.innerHTML=`<h3>Ngày ${idx} · ${fmtDayLong(d.date)}</h3>
+  const swapSel = TRIP.days.length<2 ? '' : `<select id="dSwap" aria-label="Hoán đổi lịch trình ngày này với ngày khác" title="Đổi điểm đến và lưu ý giữa hai ngày. Thời tiết vẫn giữ theo ngày."><option value="">⇄ Hoán đổi với…</option>${TRIP.days.map((x,i)=>i===SELD?'':`<option value="${i}">Ngày ${i+1} · ${fmtDay(x.date)}</option>`).join('')}</select>`;
+  sec1.innerHTML=`<div class="dhrow"><h3>Ngày ${idx} · ${fmtDayLong(d.date)}</h3>${swapSel}</div>
     <div class="weather">
       <label class="f"><span>Thời tiết</span><select id="wCond">${WEATHER.map(w=>`<option value="${w[0]}">${w[1]} ${w[2]}</option>`).join('')}</select></label>
       <label class="f"><span>Thấp °C</span><input type="number" id="wMin"></label>
@@ -1098,6 +1122,7 @@ function renderDay(){
   $('#wCond').onchange=e=>{ w.cond=e.target.value; w.src='Nhập tay'; changed(); };
   $('#wMin').oninput=e=>{ w.tmin=e.target.value; changed(); }; $('#wMax').oninput=e=>{ w.tmax=e.target.value; changed(); }; $('#wText').oninput=e=>{ w.text=e.target.value; changed(); };
   $('#wFetch').onclick=()=>fetchWeather(d);
+  if (swapSel) $('#dSwap').onchange=e=>{ if (e.target.value!=='') swapDays(SELD, +e.target.value); };
   // notes
   const sec2=el('div','sec'); sec2.innerHTML='<h3>Lưu ý trong ngày</h3>'; const nl=el('div');
   d.notes.forEach((n,i)=>{
@@ -1119,7 +1144,7 @@ function renderDay(){
   const addN=el('button','btn small','+ Thêm lưu ý'); addN.type='button'; addN.onclick=()=>{ d.notes.push({ id:uid('n'), level:'orange', html:'' }); changed(true); }; sec2.appendChild(addN);
   box.appendChild(sec2);
   // stops
-  const sec3=el('div','sec');
+  const sec3=el('div','sec'); sec3.id='eStops';
   const est=dayCost(d,'sunny');
   sec3.innerHTML=`<h3>Điểm đến</h3>`;
   const chip=el('div','placechip','<span aria-hidden="true">📍</span><span>Thêm điểm đến<br><small style="font-weight:400;color:var(--muted)">Kéo vào bản đồ, hoặc bấm rồi chọn vị trí</small></span>');
@@ -1128,22 +1153,30 @@ function renderDay(){
   const togglePlace=()=>{ const on=!eMap.placing; eMap.setPlacing(on); chip.classList.toggle('on', on); $('#eHint').textContent = on ? 'Nhấp lên bản đồ để đặt điểm đến.' : 'Kéo ô “Thêm điểm đến” vào bản đồ, hoặc nhấp đúp lên bản đồ.'; };
   chip.onclick=togglePlace; chip.onkeydown=e=>{ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); togglePlace(); } };
   sec3.appendChild(chip);
-  const ul=el('ul','tl'); ul.style.marginTop='12px';
-  let dragI=null;
+  const ul=el('ul','tl e'); ul.style.marginTop='12px';
   d.stops.forEach((s,i)=>{
     const lg=legOf(d,s); const m=lg&&s.leg ? MODES[s.leg.mode]||MODES.other : null;
-    const li=el('li','stop draggable'+(s.plan==='rainy'?' rainy':''));
-    li.draggable=true;
-    li.innerHTML=`<div class="t">${esc(timeLabel(s,d))}<small>${durLabel(s)}</small></div>
+    const li=el('li','stop e'+(s.plan==='rainy'?' rainy':'')+(DRAG&&DRAG.on&&DRAG.item===s?' dragging':'')); li.dataset.i=i; li.dataset.id=s.id;
+    const label=s.name||'(Chưa đặt tên)';
+    li.innerHTML=`<button class="grip" type="button" aria-label="Di chuyển ${esc(label)}" title="Kéo để đổi thứ tự, hoặc thả lên một ngày ở trên để chuyển sang ngày đó. Bàn phím: ↑ ↓ đổi thứ tự, ← → chuyển ngày.">${GRIP_SVG}</button>
+      <div class="t">${esc(timeLabel(s,d))}<small>${durLabel(s)}</small></div>
       <div class="dot">${i+1}</div>
       <div class="nm"><b>${esc(s.name||'(Chưa đặt tên)')}${s.plan!=='all'?`<span class="badge">${s.plan==='sunny'?'☀':'☂'}</span>`:''}</b><span>${m?m.icon+' '+m.label+(s.leg.min?' · '+fmtDur(s.leg.min):''):'Điểm xuất phát'}${s.cost!=null?' · '+fmtMoney(s.cost,s.cur,s.cost2):''}</span></div>
       <div class="acts"><button class="btn icon small" type="button" aria-label="Sửa">✎</button></div>`;
-    li.querySelector('button').onclick=()=>openStop(s,false);
-    li.ondblclick=()=>openStop(s,false);
-    li.ondragstart=e=>{ dragI=i; e.dataTransfer.setData('text/plain','reorder'); e.dataTransfer.effectAllowed='move'; };
-    li.ondragover=e=>{ if (dragI==null) return; e.preventDefault(); li.classList.add('dragover'); };
-    li.ondragleave=()=>li.classList.remove('dragover');
-    li.ondrop=e=>{ e.preventDefault(); li.classList.remove('dragover'); if (dragI==null||dragI===i) return; const [it]=d.stops.splice(dragI,1); d.stops.splice(i,0,it); dragI=null; changed(true); };
+    const grip=li.querySelector('.grip');
+    li.querySelector('.acts button').onclick=()=>openStop(s,false);
+    li.ondblclick=e=>{ if (!e.target.closest('.grip')) openStop(s,false); };
+    grip.onpointerdown=e=>{ if (!e.button) dragStart(e, 'stop', s, li, label); };
+    li.onpointerdown=e=>{ if (e.pointerType==='mouse' && !e.button && !e.target.closest('button,a')) dragStart(e, 'stop', s, li, label); };
+    grip.onkeydown=e=>{
+      const prev=TRIP.days[SELD-1], next=TRIP.days[SELD+1];
+      if (e.key==='ArrowUp' && i>0) moveStop(s, d, i-1, { focus:true });
+      else if (e.key==='ArrowDown' && i<d.stops.length-1) moveStop(s, d, i+2, { focus:true });
+      else if (e.key==='ArrowLeft' && prev) moveStop(s, prev, prev.stops.length, { follow:true, focus:true });
+      else if (e.key==='ArrowRight' && next) moveStop(s, next, next.stops.length, { follow:true, focus:true });
+      else return;
+      e.preventDefault();
+    };
     ul.appendChild(li);
   });
   sec3.appendChild(ul);
@@ -1154,8 +1187,109 @@ function renderDay(){
     tools.appendChild(sortB);
     tools.appendChild(el('span','hint',`Ước tính: ${moneyList(est.all)}${dayHasAlt(d)?' (☀)':''}`)).style.margin='0';
     sec3.appendChild(tools);
+    sec3.appendChild(el('p','hint','Kéo ⋮⋮ để đổi thứ tự, hoặc thả lên một ngày ở trên để chuyển sang ngày đó. Điểm được chuyển giữ nguyên thời lượng, giờ đến để trống.'));
   }
   box.appendChild(sec3);
+}
+/* ---- moving stops and swapping days ---- */
+const GRIP_SVG = '<svg viewBox="0 0 10 16" aria-hidden="true"><circle cx="2.5" cy="3" r="1.4"/><circle cx="7.5" cy="3" r="1.4"/><circle cx="2.5" cy="8" r="1.4"/><circle cx="7.5" cy="8" r="1.4"/><circle cx="2.5" cy="13" r="1.4"/><circle cx="7.5" cy="13" r="1.4"/></svg>';
+const dayOfStop = s => TRIP.days.find(d=>d.stops.includes(s));
+// Undo restores the days as they were, as long as nothing else was edited in between.
+function offerUndo(msg, snap){
+  const v=EDITVER;
+  toast(msg, 6500, { label:'Hoàn tác', fn:()=>{
+    if (EDITVER!==v){ toast('Lịch trình đã thay đổi sau đó nên không hoàn tác được nữa.'); return; }
+    TRIP.days=JSON.parse(snap); SELD=clamp(SELD,0,TRIP.days.length-1); changed(true); renderDayChips(); fitDay(); toast('Đã hoàn tác');
+  } });
+}
+// Put stop s in day `to` before the stop now at index idx (idx = length: at the end). A moved stop keeps its duration,
+// but its arrival time no longer holds, so it becomes unknown.
+function moveStop(s, to, idx, o={}){
+  const from=dayOfStop(s); if (!from || !to) return;
+  const fi=from.stops.indexOf(s); let ti=clamp(idx, 0, to.stops.length);
+  if (from===to){ if (ti>fi) ti--; if (ti===fi) return; }
+  const snap=JSON.stringify(TRIP.days);
+  from.stops.splice(fi,1); to.stops.splice(ti,0,s); s.time='';
+  const di=TRIP.days.indexOf(to); if (o.follow) SELD=di;
+  changed(true); renderDayChips(); if (o.follow) fitDay();
+  const name=s.name||'điểm đến';
+  offerUndo(from===to ? `Đã chuyển “${name}” tới vị trí ${ti+1}, giờ đến để trống.` : `Đã chuyển “${name}” sang Ngày ${di+1}, giờ đến để trống.`, snap);
+  if (o.focus){ const g=$(`#eStops .stop[data-id="${s.id}"] .grip`); if (g) g.focus(); }
+}
+// Swap what happens on two days (stops and notes). Each date keeps its own weather.
+function swapDays(i, j){
+  const a=TRIP.days[i], b=TRIP.days[j]; if (!a || !b || i===j) return;
+  const snap=JSON.stringify(TRIP.days);
+  [a.stops, b.stops]=[b.stops, a.stops]; [a.notes, b.notes]=[b.notes, a.notes];
+  changed(true); renderDayChips(); fitDay();
+  offerUndo(`Đã hoán đổi lịch trình Ngày ${i+1} và Ngày ${j+1}.`, snap);
+}
+/* Drag with pointer events rather than HTML drag-and-drop, so a finger on the ⋮⋮ handle works as well as a mouse.
+   A stop can go to another position, onto a day chip (end of that day), or, after resting on a chip for a moment,
+   into that day's list at a chosen position. A day chip dropped on another chip swaps the two days. */
+const SPRING_MS = 600;
+let DRAG = null;
+function dragStart(e, kind, item, src, label){
+  if (DRAG) return;
+  DRAG={ kind, item, src, label, id:e.pointerId, x0:e.clientX, y0:e.clientY, x:e.clientX, y:e.clientY, tol:e.pointerType==='touch'?6:4, on:false, target:null, hover:-1, hoverT:0, raf:0 };
+  addEventListener('pointermove', dragMove, true); addEventListener('pointerup', dragUp, true); addEventListener('pointercancel', dragCancel, true); addEventListener('keydown', dragKey, true);
+}
+function dragMove(e){
+  const D=DRAG; if (!D || e.pointerId!==D.id || D.dead) return; D.x=e.clientX; D.y=e.clientY;
+  if (!D.on){
+    if (Math.hypot(D.x-D.x0, D.y-D.y0) < D.tol) return;
+    D.on=true; D.ghost=el('div','dragghost', esc(D.label)); document.body.appendChild(D.ghost); document.body.classList.add('dragging'); D.src.classList.add('dragging');
+    const tick=()=>{ if (DRAG!==D || D.dead) return; dragTick(D); D.raf=requestAnimationFrame(tick); }; D.raf=requestAnimationFrame(tick);
+  }
+  e.preventDefault(); const gw=D.ghost.offsetWidth/2+8; D.ghost.style.left=clamp(D.x, gw, Math.max(gw, innerWidth-gw))+'px'; D.ghost.style.top=D.y+'px'; dragAim(D);
+}
+function dragClear(){ $$('#editor .drop-before, #editor .drop-after, #editor .dropzone, #editor .daychip.drop').forEach(x=>x.classList.remove('drop-before','drop-after','dropzone','drop')); }
+function dragAim(D){
+  dragClear(); D.target=null;
+  const hit=document.elementFromPoint(D.x, D.y), chip=hit && hit.closest('#eDays .daychip');
+  if (chip){
+    const di=+chip.dataset.i; if (D.hover!==di){ D.hover=di; D.hoverT=performance.now(); }
+    if (D.kind==='day'){ if (di!==D.item){ D.target={ type:'swap', di }; chip.classList.add('drop'); } }
+    else if (TRIP.days[di]!==dayOfStop(D.item)){ D.target={ type:'end', di }; chip.classList.add('drop'); }
+    return;
+  }
+  D.hover=-1;
+  if (D.kind!=='stop') return;
+  const zone=hit && hit.closest('#eStops'); if (!zone) return;
+  const rows=$$('#eStops .stop'); let idx=rows.length;
+  for (let k=0;k<rows.length;k++){ const r=rows[k].getBoundingClientRect(); if (D.y < r.top+r.height/2){ idx=k; break; } }
+  const day=curDay(); if (day===dayOfStop(D.item)){ const fi=day.stops.indexOf(D.item); if (idx===fi || idx===fi+1) return; } // would land where it already is
+  D.target={ type:'pos', di:SELD, idx };
+  if (!rows.length) zone.classList.add('dropzone'); else if (idx<rows.length) rows[idx].classList.add('drop-before'); else rows[rows.length-1].classList.add('drop-after');
+}
+function dragTick(D){
+  // resting on another day's chip opens that day
+  if (D.kind==='stop' && D.hover>=0 && D.hover!==SELD && performance.now()-D.hoverT>SPRING_MS){ SELD=D.hover; renderDayChips(); renderDay(); fitDay(); dragAim(D); }
+  // near the top or bottom edge of the list, scroll it
+  const side=$('#editor .side'), own=getComputedStyle(side).overflowY!=='visible';
+  const box=own ? side.getBoundingClientRect() : { top:0, bottom:innerHeight };
+  const top=Math.max(box.top, $('#eDays').getBoundingClientRect().bottom), E=44;
+  let v=0; if (D.y>top && D.y<top+E) v=-(1-(D.y-top)/E); else if (D.y>box.bottom-E && D.y<box.bottom+20) v=Math.min(1, 1-(box.bottom-D.y)/E);
+  if (v){ const dy=Math.round(v*14); if (own) side.scrollTop+=dy; else window.scrollBy(0, dy); dragAim(D); }
+}
+function dragEnd(){
+  const D=DRAG; if (!D) return; DRAG=null; cancelAnimationFrame(D.raf);
+  removeEventListener('pointermove', dragMove, true); removeEventListener('pointerup', dragUp, true); removeEventListener('pointercancel', dragCancel, true); removeEventListener('keydown', dragKey, true);
+  if (D.ghost) D.ghost.remove(); document.body.classList.remove('dragging'); $$('#editor .stop.dragging').forEach(x=>x.classList.remove('dragging')); D.src.classList.remove('dragging'); dragClear();
+}
+function swallowClick(){ const f=e=>{ e.stopPropagation(); e.preventDefault(); }; addEventListener('click', f, true); setTimeout(()=>removeEventListener('click', f, true), 0); }
+function dragUp(e){
+  const D=DRAG; if (!D || e.pointerId!==D.id) return; const tg=D.dead ? null : D.target; dragEnd();
+  if (!D.on) return;
+  swallowClick(); if (!tg) return;
+  if (D.kind==='day') swapDays(D.item, tg.di);
+  else if (tg.type==='end'){ const to=TRIP.days[tg.di]; moveStop(D.item, to, to.stops.length); }
+  else moveStop(D.item, TRIP.days[tg.di], tg.idx);
+}
+function dragCancel(e){ if (DRAG && e.pointerId===DRAG.id) dragEnd(); }
+function dragKey(e){ // Esc drops nothing; the pointer-up that follows is swallowed
+  const D=DRAG; if (!D || !D.on || e.key!=='Escape') return; e.preventDefault(); e.stopPropagation();
+  D.dead=true; cancelAnimationFrame(D.raf); if (D.ghost) D.ghost.remove(); document.body.classList.remove('dragging'); $$('#editor .stop.dragging').forEach(x=>x.classList.remove('dragging')); dragClear();
 }
 async function fetchWeather(d){
   const i=TRIP.days.indexOf(d);
@@ -1228,6 +1362,8 @@ function editorScene(){
 }
 function initEditor(){
   $('#editor').hidden=false;
+  const tabs=$('#editor .tabs'), tabsH=()=>document.documentElement.style.setProperty('--tabsH', tabs.offsetHeight+'px');
+  new ResizeObserver(tabsH).observe(tabs); tabsH();
   eMap = new MapView($('#eMap'), {
     scene: editorScene,
     fitPoints: () => curDay() && curDay().stops.length ? curDay().stops : TRIP.days.flatMap(d=>d.stops),
@@ -1249,6 +1385,11 @@ const MARK_TTL = 7*24*3600*1000;
 const markKey = () => 'trip-marks:'+TRIP.id;
 function loadMarks(){ MARKS=new Map(); try { const o=JSON.parse(localStorage.getItem(markKey())||'null'); if (o && o.exp > Date.now()) MARKS=new Map(Object.entries(o.m)); else localStorage.removeItem(markKey()); } catch(e){} }
 function saveMarks(){ try { if (!MARKS.size) localStorage.removeItem(markKey()); else localStorage.setItem(markKey(), JSON.stringify({ exp:Date.now()+MARK_TTL, m:Object.fromEntries(MARKS) })); } catch(e){} }
+const NOTE_TTL = 30*24*3600*1000;
+const noteKey = () => 'trip-notes-min:'+TRIP.id;
+let NOTEMIN = new Set(); // dates whose reminders are folded
+function loadNoteMin(){ NOTEMIN=new Set(); try { const o=JSON.parse(localStorage.getItem(noteKey())||'null'); if (o && o.exp > Date.now()) NOTEMIN=new Set(o.d); else localStorage.removeItem(noteKey()); } catch(e){} }
+function saveNoteMin(){ try { if (!NOTEMIN.size) localStorage.removeItem(noteKey()); else localStorage.setItem(noteKey(), JSON.stringify({ exp:Date.now()+NOTE_TTL, d:[...NOTEMIN] })); } catch(e){} }
 const dayColor = d => DAY_COLORS[TRIP.days.indexOf(d) % DAY_COLORS.length];
 const selDays = () => TRIP.days.filter((d,i)=>VSEL.has(i));
 function viewerScene(){
@@ -1274,12 +1415,23 @@ function renderViewerHead(){
 // The ☀/☂ switch only shows when a selected day has a bad-weather plan.
 function syncPlanSeg(){ $('#vPlan').hidden = !selDays().some(dayHasAlt); }
 $('#vInfoBtn').onclick=()=>{ const i=$('#vInfo'); i.hidden=!i.hidden; $('#vInfoBtn').setAttribute('aria-expanded', !i.hidden); };
+// Day tabs: "All" shows every day; a day tab shows that day alone (Ctrl/⌘-click adds more days to the view).
 function renderVDays(){
   const box=$('#vDays'); box.innerHTML='';
-  TRIP.days.forEach((d,i)=>{ const b=el('button','daychip',`<b>${fmtDM(d.date)}</b>`); b.type='button'; b.setAttribute('aria-pressed', VSEL.has(i)); b.style.borderTop=`3px solid ${dayColor(d)}`;
-    b.title='Nhấp để chọn hoặc bỏ chọn ngày, nhấp đúp để chọn tất cả';
-    b.onclick=()=>{ if (VSEL.size===TRIP.days.length) VSEL=new Set([i]); else if (VSEL.has(i)) { if (VSEL.size>1) VSEL.delete(i); } else VSEL.add(i); afterSel(); };
-    b.ondblclick=()=>{ VSEL=new Set(TRIP.days.map((_,k)=>k)); afterSel(); };
+  const n=TRIP.days.length, all=n>1 && VSEL.size===n;
+  if (n>1){
+    const a=el('button','daychip','<b>All</b>'); a.type='button'; a.setAttribute('aria-pressed', all); a.title='Xem lịch trình tất cả các ngày';
+    const k=100/n; // a stripe of every day's route colour
+    Object.assign(a.style, { borderTop:'3px solid transparent', backgroundImage:`linear-gradient(90deg,${TRIP.days.map((d,i)=>`${dayColor(d)} ${(i*k).toFixed(2)}% ${((i+1)*k).toFixed(2)}%`).join(',')})`, backgroundSize:'100% 3px', backgroundRepeat:'no-repeat', backgroundOrigin:'border-box' });
+    a.onclick=()=>{ VSEL=new Set(TRIP.days.map((_,i)=>i)); VOPEN=new Set(VSEL); afterSel(); };
+    box.appendChild(a);
+  }
+  TRIP.days.forEach((d,i)=>{ const b=el('button','daychip',`<b>${fmtDM(d.date)}</b>`); b.type='button'; b.setAttribute('aria-pressed', !all && VSEL.has(i)); b.style.borderTop=`3px solid ${dayColor(d)}`;
+    b.title='Xem ngày này. Giữ Ctrl (⌘ trên Mac) khi nhấp để xem thêm ngày khác cùng lúc.';
+    b.onclick=e=>{
+      if ((e.ctrlKey||e.metaKey||e.shiftKey) && !all){ if (VSEL.has(i)){ if (VSEL.size>1) VSEL.delete(i); } else { VSEL.add(i); VOPEN.add(i); } }
+      else { VSEL=new Set([i]); VOPEN.add(i); }
+      afterSel(); };
     box.appendChild(b); });
 }
 function afterSel(){ stopPlay(); FOCUS=null; renderVDays(); renderVList(); syncPlanSeg(); vMap.view=null; vMap.fit(); }
@@ -1291,14 +1443,18 @@ function renderVList(){
   selDays().forEach(d=>{
     const di=TRIP.days.indexOf(d), color=dayColor(d), open=VOPEN.has(di), sec=el('section','daysec'+(open?'':' closed'));
     const head=el('div','dayhead'); head.innerHTML=`<button class="dtog" type="button" aria-expanded="${open}"><span class="chev" aria-hidden="true">${open?'▾':'▸'}</span><span class="nb" style="background:${color}">N${di+1}</span><span class="w">${esc(dayTag(d))}</span></button>`;
-    const estB=el('button','btn small','Ước tính chi'); estB.type='button'; estB.setAttribute('aria-expanded','false'); head.appendChild(estB); sec.appendChild(head);
+    sec.appendChild(head);
     head.querySelector('.dtog').onclick=()=>{ if (VOPEN.has(di)) VOPEN.delete(di); else VOPEN.add(di); renderVList(); };
-    thumbTip(head.querySelector('.dtog'), d);
-    const estBox=el('div','est'); estBox.hidden=true; estBox.style.margin='0 18px 8px';
-    estB.onclick=()=>{ if (estBox.hidden){ const c=dayCost(d, VPLAN, MARKS); estBox.innerHTML=`<table><tr><td>Điểm đến</td><td>${moneyList(c.stops)}</td></tr><tr><td>Di chuyển</td><td>${moneyList(c.legs)}</td></tr><tr><td><b>Tổng ngày</b></td><td>${moneyList(c.all)}</td></tr></table><div class="hint">${dayHasAlt(d)?`Theo phương án ${VPLAN==='sunny'?'☀ Trời đẹp':'☂ Trời xấu'}, không`:'Không'} tính điểm đã đánh dấu xóa.</div>`; } estBox.hidden=!estBox.hidden; estB.setAttribute('aria-expanded', !estBox.hidden); };
-    sec.appendChild(estBox);
+    // "Ước tính chi" only shows when some stop or leg of the day (in this plan, not marked deleted) has a known cost
+    const c=dayCost(d, VPLAN, MARKS);
+    if ([...c.all.values()].some(v=>v[1]>0)){
+      const estB=el('button','btn small','Ước tính chi'); estB.type='button'; estB.setAttribute('aria-expanded','false'); head.appendChild(estB);
+      const estBox=el('div','est'); estBox.hidden=true; estBox.style.margin='0 18px 8px';
+      estB.onclick=()=>{ if (estBox.hidden){ estBox.innerHTML=`<table><tr><td>Điểm đến</td><td>${moneyList(c.stops)}</td></tr><tr><td>Di chuyển</td><td>${moneyList(c.legs)}</td></tr><tr><td><b>Tổng ngày</b></td><td>${moneyList(c.all)}</td></tr></table><div class="hint">${dayHasAlt(d)?`Theo phương án ${VPLAN==='sunny'?'☀ Trời đẹp':'☂ Trời xấu'}, không`:'Không'} tính điểm đã đánh dấu xóa.</div>`; } estBox.hidden=!estBox.hidden; estB.setAttribute('aria-expanded', !estBox.hidden); };
+      sec.appendChild(estBox);
+    }
     if (!open){ box.appendChild(sec); return; }
-    if (d.notes.length){ const nl=el('div','notes-list'); d.notes.forEach(n=>{ if (!plainText(n.html) && !/<img/i.test(n.html)) return; nl.appendChild(el('div','n',`<span class="lvl ${n.level}" title="${LEVELS[n.level]}"></span><div class="rich">${sanitize(n.html)}</div>`)); }); sec.appendChild(nl); thumbTip(nl, d); }
+    const notes=d.notes.filter(n=>plainText(n.html) || /<img/i.test(n.html)); if (notes.length) sec.appendChild(notesBlock(d, notes));
     const ul=el('ul','tl v');
     d.stops.forEach((s,i)=>{
       const mk=MARKS.get(s.id), off=!planOk(s,VPLAN), lg=legOf(d,s), m=lg&&s.leg?(MODES[s.leg.mode]||MODES.other):null;
@@ -1331,23 +1487,14 @@ function focusStop(s, d){
   $$('#vList .stop.focus').forEach(x=>x.classList.remove('focus')); const li=$(`#vList .stop[data-id="${s.id}"]`); if (li) li.classList.add('focus');
   vMap.draw();
 }
-/* hover tooltip: thumbnails of the day's stops */
-const TIP = (() => { const t=el('div','thumbtip'); t.hidden=true; t.setAttribute('role','tooltip'); document.body.appendChild(t);
-  t.addEventListener('click', e=>{ if (e.target.closest('.tipx')){ e.stopPropagation(); t.hidden=true; } });
-  // On phones a tap can leave the tooltip open (its anchor gets re-rendered), so any tap elsewhere or a scroll closes it.
-  document.addEventListener('pointerdown', e=>{ if (!t.hidden && !t.contains(e.target)) t.hidden=true; }, true);
-  addEventListener('scroll', ()=>{ t.hidden=true; }, { capture:true, passive:true });
-  return t; })();
-function thumbTip(target, d){
-  const show = () => {
-    const items=d.stops.filter(s=>s.imgs&&s.imgs.length&&MARKS.get(s.id)!=='del'); if (!items.length) return;
-    const h=TRIP.thumbH||64;
-    TIP.innerHTML=`<button class="tipx" type="button" aria-label="Đóng" title="Đóng">✕</button>`+items.map(s=>`<figure><img src="${esc(imgSrc(s.imgs[0],false))}" alt="" style="height:${h}px"><figcaption>${esc(s.name||'')}</figcaption></figure>`).join('');
-    TIP.hidden=false; const r=target.getBoundingClientRect(); const w=Math.min(380, innerWidth-16);
-    TIP.style.maxWidth=w+'px'; TIP.style.left=Math.max(8, Math.min(r.left, innerWidth-w-8))+'px';
-    const th=TIP.offsetHeight; TIP.style.top=(r.bottom+6+th > innerHeight ? Math.max(8, r.top-6-th) : r.bottom+6)+'px';
-  };
-  target.addEventListener('mouseenter', show); target.addEventListener('mouseleave', ()=>{ TIP.hidden=true; });
+// A day's reminders, under a small toggle. Folded, it keeps one coloured dot per reminder so a red one still shows.
+function notesBlock(d, notes){
+  const wrap=el('div','notes'), tog=el('button','ntog'), list=el('div','notes-list'); tog.type='button';
+  notes.forEach(n=>list.appendChild(el('div','n',`<span class="lvl ${n.level}" title="${LEVELS[n.level]}"></span><div class="rich">${sanitize(n.html)}</div>`)));
+  const paint=()=>{ const min=NOTEMIN.has(d.date); list.hidden=min; tog.setAttribute('aria-expanded', !min); tog.title = min ? 'Hiện các lưu ý' : 'Thu gọn các lưu ý';
+    tog.innerHTML=`<span class="chev" aria-hidden="true">${min?'▸':'▾'}</span><span>Lưu ý (${notes.length})</span>${min?`<span class="ndots" aria-hidden="true">${notes.map(n=>`<span class="lvl ${n.level}"></span>`).join('')}</span>`:''}`; };
+  tog.onclick=()=>{ if (NOTEMIN.has(d.date)) NOTEMIN.delete(d.date); else NOTEMIN.add(d.date); saveNoteMin(); paint(); };
+  paint(); wrap.append(tog, list); return wrap;
 }
 function openDrawer(s, d){
   DRAWER={s,d}; const dr=$('#vDrawer'); dr.hidden=false;
@@ -1428,7 +1575,7 @@ segBind('vShow', v=>{ VSHOW=v; if (vMap && vMap.player){ vMap.player.show=v; vMa
 segBind('vPlan', v=>{ VPLAN=v; stopPlay(); renderVList(); vMap.draw(); });
 function initViewer(preview){
   PREVIEW=!!preview; $('#viewer').hidden=false; $('#editor').hidden=true; $('#backEdit').hidden=!preview;
-  loadMarks(); VSEL=new Set(TRIP.days.map((_,i)=>i)); VOPEN=new Set(); FOCUS=null; renderViewerHead(); renderVDays(); renderVList();
+  loadMarks(); loadNoteMin(); VSEL=new Set(TRIP.days.length?[0]:[]); VOPEN=new Set([0]); FOCUS=null; renderViewerHead(); renderVDays(); renderVList();
   if (!vMap) vMap=new MapView($('#vMap'), { scene:viewerScene, fitPoints:()=>selDays().flatMap(d=>d.stops), onPin:s=>{ const d=TRIP.days.find(x=>x.stops.includes(s)); FOCUS=s.id; openDrawer(s,d); markNow(s.id); vMap.draw(); }, onLabel:s=>jumpToStop(s), onCardMove:(x,y)=>{ CARDPOS = x==null ? null : { x, y }; } });
   else { vMap.view=null; vMap.resize(); }
   document.title = (TRIP.name||'Lịch trình');
@@ -1470,12 +1617,17 @@ $('#importZip').onchange=async e=>{
     let t, zip=null;
     if (/\.json$/i.test(f.name)) t=JSON.parse(await f.text());
     else { if (!window.JSZip) throw new Error('chưa tải được JSZip'); zip=await JSZip.loadAsync(f); const j=zip.file('trip.json'); if (!j) throw new Error('không thấy trip.json trong file zip (file này có thể là bản xem, không phải bản chỉnh sửa)'); t=JSON.parse(await j.async('string')); }
-    IMAGES.clear(); IMGCACHE.clear();
-    for (const [id,r] of Object.entries(t.images||{})){ let data=r.data; if (!data && zip && r.file && zip.file(r.file)) data=await blobToData(await zip.file(r.file).async('blob')); if (data) IMAGES.set(id,{ name:r.name||id, mime:'image/jpeg', data }); else if (r.file) IMAGES.set(id,{ name:r.name||id, mime:'image/jpeg', file:r.file }); }
-    delete t.images; TRIP=normalizeTrip(t); SELD=0; areaCache.clear();
+    await useTripDoc(t, zip); SELD=0; $('#eNotice').hidden=true;
     renderHeader(); renderTrip(); renderDayChips(); renderDay(); eMap.view=null; eMap.fit(); autosave(); toast('Đã mở '+f.name);
   } catch(err){ alert('Không mở được file: '+err.message); }
 };
+// Load a trip document in the trip.json format (a saved edit, or the default trip beside the page).
+// Its images are either inside the zip or linked by path, e.g. images/x.jpg next to the page.
+async function useTripDoc(t, zip){
+  IMAGES.clear(); IMGCACHE.clear();
+  for (const [id,r] of Object.entries(t.images||{})){ let data=r.data; if (!data && zip && r.file && zip.file(r.file)) data=await blobToData(await zip.file(r.file).async('blob')); if (data) IMAGES.set(id,{ name:r.name||id, mime:'image/jpeg', data }); else if (r.file) IMAGES.set(id,{ name:r.name||id, mime:'image/jpeg', file:r.file }); }
+  delete t.images; TRIP=normalizeTrip(t); areaCache.clear();
+}
 function normalizeTrip(t){
   t.thumbH=t.thumbH||64;
   (t.bookings||[]).forEach(b=>{ if (!b.state) b.state = b.status==='pending' ? 'pending' : ({paid:'paid',partial:'partial',unpaid:'unpaid'}[b.paid]||'booked'); if (b.cost2===undefined) b.cost2=null; });
@@ -1602,125 +1754,18 @@ function printTrip(marks){
 $('#ePdf').onclick=()=>printTrip(null);
 $('#vPdf').onclick=()=>printTrip(MARKS);
 
-/* ============================================================ sample & init */
-// Sample trip built from KHD.docx. Its photos are linked from the images/ folder next to this page.
-const SAMPLE_ID = 'khd-2027';
-function sampleTrip(){
-  const q = name => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`;
-  const HOTEL = 'https://maps.app.goo.gl/QNp2JC4sfaKikKhN6';
-  const P = {
-    cts:   ['Sân bay New Chitose', 42.7752, 141.6923, 'New Chitose Airport'],
-    horse: ['Northern Horse Park', 42.7184, 141.6735, 'Northern Horse Park Tomakomai'],
-    spk:   ['Ga Sapporo', 43.0687, 141.3508, 'Sapporo Station'],
-    spkN:  ['Ga Sapporo, cổng Bắc', 43.0700, 141.3506, 'Sapporo Station North Exit'],
-    hotel: ['Khách sạn LiVEMAX Premium Odorikoen', 43.0573, 141.3430, 'HOTEL LiVEMAX PREMIUM Sapporo-Odorikouen'],
-    odori: ['Công viên Odori & tháp TV Sapporo', 43.0611, 141.3564, 'Sapporo TV Tower'],
-    curry: ['Soup curry Garaku', 43.0574, 141.3540, 'Soup Curry GARAKU Sapporo'],
-    zoo:   ['Sở thú Maruyama', 43.0518, 141.3090, 'Sapporo Maruyama Zoo'],
-    jingu: ['Đền Hokkaido', 43.0543, 141.3077, 'Hokkaido Jingu'],
-    shiki: ['Đồi Shikisai no Oka', 43.4630, 142.4750, 'Shikisai no Oka Biei'],
-    xmas:  ['Christmas Tree', 43.5470, 142.4385, 'Christmas Tree Biei'],
-    taki:  ['Thác Shirahige', 43.4797, 142.6362, 'Shirahige Waterfall Biei'],
-    aoi:   ['Shirogane Blue Pond', 43.4934, 142.6143, 'Shirogane Blue Pond'],
-    ningle:['Ningle Terrace', 43.3290, 142.3565, 'Ningle Terrace Furano'],
-    mako:  ['Ga Makomanai', 42.9928, 141.3534, 'Makomanai Station'],
-    buddha:['Hill of the Buddha & tượng Moai', 42.9236, 141.3940, 'Hill of the Buddha Makomanai Takino Cemetery'],
-    otaru: ['Kênh đào Otaru', 43.1995, 141.0019, 'Otaru Canal'],
-    sakai: ['Phố Sakaimachi & LeTAO', 43.1912, 141.0058, 'LeTAO Main Store Otaru'],
-    dinner:['Ăn tối ở Sapporo', 43.0605, 141.3536, 'Tanukikoji Sapporo'],
-    bt:    ['Bến xe buýt Sapporo Ekimae', 43.0674, 141.3530, 'Sapporo Ekimae Bus Terminal'],
-    asazoo:['Sở thú Asahiyama', 43.7685, 142.4800, 'Asahiyama Zoo'],
-    shira: ['Ga Shiraoi', 42.5513, 141.3564, 'Shiraoi Station'],
-    upopoy:['Upopoy', 42.5577, 141.3611, 'Upopoy National Ainu Museum'],
-  };
-  const PHOTO = id => { if (!IMAGES.has(id)) IMAGES.set(id, { name:id+'.jpg', mime:'image/jpeg', file:`images/${id}.jpg` }); return id; };
-  const TM = { walk:'walking', tour:'driving' };
-  let prev=null;
-  const S = (key, time, dur, o={}) => {
-    const [name,lat,lon,qq]=P[key]; const leg=o.leg||{ mode:'other' };
-    const from=o.from ? P[o.from] : prev;
-    if (from && leg.mode!=='tour' && !leg.link) leg.link=`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from[3])}&destination=${encodeURIComponent(qq)}&travelmode=${TM[leg.mode]||'transit'}`;
-    const c = o.cost ? parseCost(o.cost) : [null,null]; const lc = leg.cost ? parseCost(leg.cost) : [null,null];
-    if (!o.keepPrev) prev=P[key];
-    return { id:uid('s'), name:o.name||name, lat, lon, time:time||'', dur:dur||null, flex:!!o.flex, plan:o.plan||'all', act:o.act||'', cost:c[0], cost2:c[1], cur:'JPY', link:o.link||q(qq), note:o.note||'', imgs:(o.imgs||[]).map(PHOTO),
-      leg:{ mode:leg.mode, min:leg.min||null, cost:lc[0], cost2:lc[1], cur:'JPY', link:leg.link||'', note:leg.note||'' } };
-  };
-  const D = (date, stops, notes=[]) => ({ date, weather:{cond:'',tmin:'',tmax:'',text:''}, notes:notes.map(([level,html])=>({ id:uid('n'), level, html })), stops });
-
-  // [D1] T3 12/1 · Chitose → Sapporo
-  const day1 = (() => { prev=null; const a=[
-    S('cts','08:50',60,{ act:'Gửi hành lý ở sân bay.', cost:'600-1000', note:'Phí gửi tùy cỡ vali.' }),
-    S('horse','10:00',240,{ plan:'sunny', act:'Cưỡi ngựa, khoảng ¥1.900 cho 5 phút. Công viên mở cửa lúc 10:00, cách sân bay khoảng 10 km.', cost:'2000-6500', link:'https://maps.app.goo.gl/aYYUtKYFdGA55b2b8', imgs:['d1-northern-horse-park'], leg:{ mode:'bus', min:15, cost:'0', note:'Xe shuttle miễn phí, chuyến 09:50.' } }),
-    S('cts','14:15',15,{ plan:'sunny', name:'Sân bay New Chitose (lấy hành lý)', act:'Lấy lại hành lý.', leg:{ mode:'bus', min:15, cost:'0', note:'Shuttle về sân bay.' } }),
-    S('spk','15:07',10,{ plan:'sunny', leg:{ mode:'train', min:37, cost:'1150', note:'Rapid Airport chuyến 14:30.' } }) ];
-    prev=P.cts; a.push(
-    S('spk','10:30',15,{ plan:'rainy', act:'Trời bão thì bỏ Horse Park, lấy hành lý đi thẳng vô Sapporo.', leg:{ mode:'train', min:37, cost:'1150', note:'Rapid Airport.' } }),
-    S('zoo','11:15',120,{ plan:'rainy', act:'Dạo sở thú Maruyama.', leg:{ mode:'subway', min:20, note:'Tuyến Tozai, xuống ga Maruyama-koen.' } }),
-    S('jingu','13:30',60,{ plan:'rainy', act:'Ghé đền Hokkaido, ngay cạnh sở thú.', link:'https://maps.app.goo.gl/EbmV7JAK1TVczxhZ8', imgs:['d1-hokkaido-jingu'], leg:{ mode:'walk', min:10 } }) );
-    prev=P.spk; a.push(
-    S('hotel','15:20',45,{ act:'Nhận phòng (sau 15:00), phòng Twin.', link:HOTEL, leg:{ mode:'subway', min:15, note:'Hoặc đi bộ khoảng 19 phút từ ga Sapporo.' } }),
-    S('odori','16:15',75,{ act:'Dạo công viên Odori, lên đài quan sát tháp TV (hoặc T38 ở ga Sapporo) ngắm blue hour.', cost:'740-1000', leg:{ mode:'walk', min:15 } }),
-    S('curry','18:00',75,{ act:'Ăn soup curry, cay cấp 0–1. Garaku đông quá thì qua Rojiura Curry SAMURAI.', leg:{ mode:'walk', min:10 } }) );
-    return a; })();
-
-  // [D2] T4 13/1 · Sapporo → Biei (tour Furano & Biei)
-  const day2 = (() => { prev=null; return [
-    S('spkN','11:30',null,{ act:'Lên xe tour Furano & Biei, xe chạy lúc 11:30.' }),
-    S('shiki','14:00',70,{ act:'Tour dừng 70 phút ngắm đồi tuyết.', imgs:['d2-shin-ei-no-oka'], leg:{ mode:'tour', min:150 } }),
-    S('xmas','15:20',20,{ link:'https://maps.app.goo.gl/9UuuU8PouDJ4cyXN6', imgs:['d2-christmas-tree'], leg:{ mode:'tour', min:10, note:'Xe buýt tour khoảng 10 phút.' } }),
-    S('taki','16:10',20,{ leg:{ mode:'tour', min:30, note:'Xe buýt tour khoảng 30 phút.' } }),
-    S('aoi','16:40',30,{ act:'Coi hồ Xanh lên đèn (illumination 16:30–21:00).', link:'https://maps.app.goo.gl/DQfDsQ5gW1QAhZGF6', imgs:['d2-shirogane-blue-pond'], leg:{ mode:'tour', min:10, note:'Xe buýt tour khoảng 10 phút.' } }),
-    S('ningle','18:10',60,{ act:'Dạo dãy nhà gỗ bán đồ thủ công trong rừng.', leg:{ mode:'tour', min:60, note:'Xe buýt tour khoảng 60 phút.' } }),
-    S('spkN','22:00',null,{ name:'Về ga Sapporo', act:'Xe rời Ningle Terrace lúc 19:10, về tới Sapporo khoảng 22:00.', leg:{ mode:'tour', min:170 } }) ]; })();
-
-  // [D3] T5 14/1 · Makomanai → Otaru
-  const day3 = (() => { prev=null; return [
-    S('hotel','08:30',null,{ name:'Khách sạn', act:'Đi tàu điện ngầm ra Makomanai.', link:HOTEL }),
-    S('mako','09:00',15,{ act:'Đón bus Chuo 108 ở bến số 2.', leg:{ mode:'subway', min:25, cost:'350', note:'Tuyến Namboku, ga cuối Makomanai.' } }),
-    S('buddha','10:15',120,{ act:'Tượng Phật trên đồi của Tadao Ando và hàng tượng Moai trong nghĩa trang Makomanai Takino. Tượng mở 10:00–15:00.', cost:'300', link:'https://maps.app.goo.gl/PkwZA1X9iH4KuWnj6', imgs:['d3-hill-of-the-buddha','d3-moai-makomanai'], leg:{ mode:'bus', min:25, cost:'380-500', note:'Bus Chuo 108, khoảng 1 chuyến/giờ.' } }),
-    S('spk','14:30',10,{ act:'Ăn trưa quanh ga rồi đón Rapid đi Otaru lúc 14:30.', leg:{ mode:'bus', min:60, note:'Bus 108 về Makomanai rồi tàu điện ngầm về ga Sapporo.' } }),
-    S('otaru','15:10',50,{ act:'Ngắm kênh đào lúc giờ vàng.', link:'https://maps.app.goo.gl/kRhznAAK9fW3267x6', imgs:['d3-otaru-canal'], leg:{ mode:'train', min:32, cost:'750', note:'Rapid Sapporo → Otaru.' } }),
-    S('sakai','16:00',75,{ act:'Dạo phố Sakaimachi, ăn nhẹ ở LeTAO, chờ đèn gas lên lúc chạng vạng.', leg:{ mode:'walk', min:10 } }),
-    S('dinner','18:15',90,{ act:'Về Sapporo ăn tối.', leg:{ mode:'train', min:32, cost:'750' } }) ]; })();
-
-  // [D4] T6 15/1 · Asahiyama
-  const day4 = (() => { prev=null; return [
-    S('bt','',null,{ act:'Lên highway bus đi Asahikawa bằng vé combo đã mua hôm trước.' }),
-    S('asazoo','',null,{ act:'Sở thú mùa đông mở 10:30–15:30, 14:30 có màn chim cánh cụt đi dạo.', link:'https://maps.app.goo.gl/BfmUeCskWAK5KZNv5', imgs:['d4-asahiyama-zoo'], leg:{ mode:'bus', min:165, note:'Highway bus Sapporo → Asahikawa (khoảng 2 tiếng), rồi bus nội thành vào sở thú. Đi bằng vé combo.' } }),
-    S('bt','',null,{ name:'Về Sapporo', leg:{ mode:'bus', min:165, note:'Bus về ga Asahikawa rồi highway bus về Sapporo, vé combo.' } }) ]; })();
-
-  // [D5] T7 16/1 · Sapporo → sân bay
-  const day5 = (() => { prev=null; return [
-    S('spk','08:30',10,{ act:'Trả phòng rồi đón Limited Express Hokuto/Suzuran (khoảng 1 chuyến/giờ).' }),
-    S('shira','09:30',10,{ leg:{ mode:'train', min:60, cost:'2500-3500', note:'Limited Express Hokuto/Suzuran.' } }),
-    S('upopoy','09:45',225,{ act:'Bảo tàng Ainu, làng nhà Ainu phục dựng, coi múa hát Ainu. Mở 9:00–17:00, có tủ gửi đồ.', cost:'1200', link:'https://maps.app.goo.gl/zAbBdXRXehL39ftL6', imgs:['d5-upopoy'], leg:{ mode:'walk', min:10 } }),
-    S('shira','13:35',10,{ name:'Ga Shiraoi (về)', leg:{ mode:'walk', min:10 } }),
-    S('cts','14:30',360,{ act:'Mua quà, ăn uống ở sân bay. Có mặt trễ nhất 17:30, bay lúc 20:55.', flex:true, leg:{ mode:'train', min:40, cost:'1500-2500', note:'Khoảng 25–40 phút tùy chuyến.' } }) ]; })();
-
-  const KLOOK_A = 'https://www.klook.com/en-US/activity/178974-furano-winter-reverie-christmas-tree-blue-pond-ningle-terrace';
-  const KLOOK_B = 'https://www.klook.com/en-US/activity/105219-asahikawa-zoo-ningle-terrace-shirahige-waterfall-day-tour-private-tour-sapporo';
-  const COMBO = 'https://www.chuo-bus.co.jp/main/setticket/?ope=list&sy=2&ge=23&ri_y=2027&ri_m=1&ri_d=14&ha_y=2027&ha_m=11&ha_d=13';
-  return normalizeTrip({ v:1, id:uid('t'), sample:SAMPLE_ID, name:'Hokkaido mùa đông', start:'2027-01-12', end:'2027-01-16', people:['M','Q','T'], currencies:['JPY','VND'], thumbH:64,
-    bookings:[
-      { id:uid('b'), item:'Chuyến bay đi · Tue. 12/1', state:'booked', cost:null, cost2:null, cur:'JPY', link:'images/skymark-so-do-ghe.jpg', note:'Skymark BC761 Nagoya (NGO) 7:10 → New Chitose 8:50, ghế 6A, 3A (M, T)\nBC171 Kobe (UKB) 8:05 → New Chitose 9:55 (Q)\nHành lý: xách tay 10 kg, ký gửi 20 kg. Link mở sơ đồ ghế.' },
-      { id:uid('b'), item:'Chuyến bay về · Sat. 16/1', state:'booked', cost:null, cost2:null, cur:'JPY', link:'', note:'Skymark BC768 New Chitose 20:55 → Nagoya (NGO) 22:45, ghế 6A, 3A (M, T)\nChuyến về Kobe (UKB) chưa có số hiệu (Q)' },
-      { id:uid('b'), item:'HOTEL LiVEMAX PREMIUM Sapporo-Odorikouen', state:'booked', cost:28500, cost2:null, cur:'JPY', link:HOTEL, note:'Từ Tue. 12/1 đến Sat. 16/1, phòng Twin. Nhận phòng sau 15:00, trả phòng trước 10:00.\n28.500 ¥ mỗi người, gồm khách sạn và vé máy bay.\nĐêm Mon. 11/1 ở Nagoya.' },
-      { id:uid('b'), item:'Tour Furano & Biei (13/1)', state:'pending', cost:7500, cost2:null, cur:'JPY', link:KLOOK_A, note:'Furano & Biei Seasonal trên Klook, 5 điểm, 11:30–22:00, đón ở cổng Bắc ga Sapporo.' },
-      { id:uid('b'), item:'Vé combo highway bus Sapporo – Asahikawa (15/1)', state:'pending', cost:5900, cost2:null, cur:'JPY', link:COMBO, note:'Mua trước trong ngày 14/1.' } ],
-    notes:'<b>Nhớ đem:</b> kairo, pin dự phòng (để trong túi áo trong), găng mỏng, ice cleats, kem dưỡng tay, giày đế bám.<br><b>Máy ảnh:</b> tối thiểu một lens tele để nén đồi tuyết, cây đơn độc, chim cánh cụt, thác; thêm 16–35 cho Blue Pond, Otaru và hầm Hill of the Buddha. Tripod gọn, khăn lau lens.<br><b>Chụp tuyết:</b> bù sáng +0.7 đến +1.3 EV, chụp RAW, WB khoảng 5.200–5.800K. Từ chỗ lạnh vào chỗ ấm thì bỏ máy vô túi zip cho khỏi đọng hơi nước.<br><b>Ăn uống:</b> ưu tiên soup curry (cay cấp 0–1, vd Rojiura Curry SAMURAI, Garaku), tonkatsu, shabu-shabu, hamburg, udon nước trong. Né ramen Asahikawa với ramen miso Sapporo nha.<br><b>Cân nhắc:</b> JR Sapporo–Furano Area Pass theo số ngày, rẻ hơn mua vé lẻ, có ghế đặt trước, lỡ tàu đổi chuyến dễ.',
-    days:[
-      D('2027-01-12', day1, [['blue','Q đáp lúc 9:55 (BC171)'], ['blue','Nếu bão: bỏ Northern Horse Park, đi Sapporo rồi ghé sở thú Maruyama/đền Hokkaido.']]),
-      D('2027-01-13', day2, [
-        ['orange',`Tour chưa đặt. Chọn tour trên Klook, đón ở Sapporo:<ul><li><a href="${KLOOK_A}">Furano &amp; Biei Seasonal</a> (¥7.500, 5 điểm): 11:30–22:00, đúng lịch bên dưới.</li><li><a href="${KLOOK_B}">Dreamy Illumination Tour</a> (từ ¥7.500, 5 điểm): 10:30–21:30, không ghé thác.</li></ul>`]]),
-      D('2027-01-14', day3, [
-        ['orange','Bus 108 khoảng 1 chuyến/giờ, chuyến cuối tầm 14:00, nên rời nghĩa trang trễ nhất 13:00.'],
-        ['orange','Nghĩa trang không có bến taxi: cài sẵn app GO (taxi khoảng ¥5.000–7.000).'],
-        ['red','Rời Otaru trễ nhất 20:30 (tàu về đến khoảng 23:00).'],
-        ['orange',`Mua trước <a href="${COMBO}">vé combo</a> (¥5.900) highway bus Sapporo – Asahikawa cho ngày mai.`],
-        ['blue','Nếu tuyết lớn: đổi sang đền Hokkaido / sở thú Maruyama. Nếu mỏi chân: bỏ Otaru.']]),
-      D('2027-01-15', day4, [['orange','Đi bằng vé combo highway bus mua hôm qua (14/1), nhớ đem theo vé.']]),
-      D('2027-01-16', day5, [['red','Trả phòng trước 10:00, dọn đồ từ tối hôm trước.'], ['red','Có mặt ở sân bay trễ nhất 17:30 (bay lúc 20:55).'], ['blue','Upopoy nghỉ Thứ Hai; 11/1/2027 là ngày lễ nên T3 12/1 nhiều khả năng đóng cửa, vì vậy dời Upopoy qua hôm nay (nhớ xác nhận lại).'], ['green','Upopoy có tủ gửi đồ, gửi vali rồi đi tham quan cho khỏe.']]),
-    ] });
+/* ============================================================ default trip & init */
+// The default trip is trip.json beside this page, in the same format as trip.json inside a saved edit (.zip),
+// with its photos in the images/ folder. To change the default, replace those files.
+const DEFAULT_TRIP_URL = 'trip.json';
+async function loadDefaultTrip(){ try { const r=await fetch(DEFAULT_TRIP_URL, { cache:'no-cache' }); if (!r.ok) throw 0; const t=await r.json(); return t && Array.isArray(t.days) ? t : null; } catch(e){ return null; } }
+// A page opened straight from disk (file://) may not read files beside it; then offer to pick trip.json by hand.
+function noDefaultNotice(){
+  const n=$('#eNotice'), local=location.protocol==='file:';
+  n.innerHTML=`<p>${local ? 'Trang đang mở thẳng từ file nên trình duyệt chặn việc đọc lịch trình mặc định (trip.json) nằm cạnh trang. Chọn file đó để mở, hoặc mở trang qua máy chủ web (ví dụ chạy <code>python -m http.server</code> trong thư mục này).' : 'Không tìm thấy lịch trình mặc định (trip.json) cạnh trang.'}</p>
+    <div class="inline"><button class="btn small primary" type="button">Chọn trip.json</button><button class="btn small ghost" type="button">Để sau</button></div>`;
+  const [pick, later]=n.querySelectorAll('button'); pick.onclick=()=>$('#importZip').click(); later.onclick=()=>{ n.hidden=true; };
+  n.hidden=false;
 }
 (async function init(){
   try { ATLAS = buildAtlas(JSON.parse($('#geo-world').textContent)); } catch(e){ console.error(e); }
@@ -1730,11 +1775,15 @@ function sampleTrip(){
     for (const [id,r] of Object.entries(embedded.images||{})) IMAGES.set(id, { file:r.file, thumb:r.thumb });
     initViewer(false);
   } else {
-    let saved=null; try { saved=await IDB.get('current'); } catch(e){}
-    const oldSample = saved && saved.trip && saved.trip.sample!==SAMPLE_ID && /^Hokkaido mùa (tuyết|đông)$/.test(saved.trip.name||'');
-    if (saved && saved.trip && !oldSample){ TRIP=normalizeTrip(saved.trip); (saved.images||[]).forEach(([id,r])=>IMAGES.set(id,r)); }
-    else TRIP=sampleTrip();
+    const [saved, def] = await Promise.all([ IDB.get('current').catch(()=>null), loadDefaultTrip() ]);
+    // The browser keeps the last edited trip. A kept copy of an older version of the default trip gives way to the current one.
+    const fromOldDefault = t => def && (t.sample ? t.sample!==def.sample : /^Hokkaido mùa (tuyết|đông)$/.test(t.name||''));
+    const keep = saved && saved.trip && !fromOldDefault(saved.trip);
+    if (keep){ TRIP=normalizeTrip(saved.trip); (saved.images||[]).forEach(([id,r])=>IMAGES.set(id,r)); }
+    else if (def) await useTripDoc(def, null);
+    else TRIP=emptyTrip();
     initEditor();
+    if (!keep && !def) noDefaultNotice();
   }
   // Higher-detail neighbouring coastlines when online; the inlined 110m map is the offline fallback.
   fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json').then(r=>r.ok?r.json():null).then(w=>{ if (!w) return; ATLAS=buildAtlas(w); areaCache.clear(); eMap&&eMap.draw(); vMap&&vMap.draw(); }).catch(()=>{});
